@@ -8,139 +8,142 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    // Display Student List
+    /**
+     * Display all students
+     */
     public function index()
     {
-        $students = Student::with('department')->get();
+        $students = Student::with('department')->latest()->get();
 
         return view('students.index', compact('students'));
     }
 
-
-    // Create Student Form
+    /**
+     * Show Add Student Form
+     */
     public function create()
     {
-        $departments = Department::all();
+        $departments = Department::orderBy('name')->get();
 
         return view('students.create', compact('departments'));
     }
 
-
-    // Store Student Data
+    /**
+     * Store Student
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'enrollment_no'=>'required|unique:students',
-            'first_name'=>'required',
-            'last_name'=>'required',
-            'gender'=>'required',
-            'department_id'=>'required',
-            'semester'=>'required'
+            'enrollment_no' => 'required|unique:students,enrollment_no',
+            'first_name'    => 'required|max:100',
+            'last_name'     => 'required|max:100',
+            'gender'        => 'required',
+            'dob'           => 'nullable|date',
+            'mobile'        => 'nullable|max:15',
+            'email'         => 'nullable|email|unique:students,email',
+            'address'       => 'nullable',
+            'department_id' => 'required|exists:departments,id',
+            'semester'      => 'required|integer',
+            'academic_year' => 'nullable|max:20',
         ]);
-
 
         Student::create([
-
-            'enrollment_no'=>$request->enrollment_no,
-            'first_name'=>$request->first_name,
-            'last_name'=>$request->last_name,
-            'gender'=>$request->gender,
-            'dob'=>$request->dob,
-            'mobile'=>$request->mobile,
-            'email'=>$request->email,
-            'address'=>$request->address,
-            'department_id'=>$request->department_id,
-            'semester'=>$request->semester,
-            'academic_year'=>$request->academic_year,
-            'qr_unique_id'=>uniqid(),
-            'status'=>'active'
-
+            'enrollment_no' => $request->enrollment_no,
+            'first_name'    => $request->first_name,
+            'last_name'     => $request->last_name,
+            'gender'        => $request->gender,
+            'dob'           => $request->dob,
+            'mobile'        => $request->mobile,
+            'email'         => $request->email,
+            'address'       => $request->address,
+            'department_id' => $request->department_id,
+            'semester'      => $request->semester,
+            'academic_year' => $request->academic_year,
+            'photo'         => null,
+            'qr_unique_id'  => uniqid('STD-'),
+            'status'        => 'active',
         ]);
 
-
         return redirect()
-        ->route('students.index')
-        ->with('success','Student Added Successfully');
+            ->route('students.index')
+            ->with('success', 'Student Added Successfully.');
     }
 
+    /**
+     * Display Single Student
+     */
+    public function show($id)
+    {
+        $student = Student::with('department')->findOrFail($id);
 
+        return view('students.show', compact('student'));
+    }
 
-    // Step 4.3: Edit Student Form
+    /**
+     * Show Edit Form
+     */
     public function edit($id)
     {
         $student = Student::findOrFail($id);
 
-        $departments = Department::all();
+        $departments = Department::orderBy('name')->get();
 
-
-        return view('students.edit', compact(
-            'student',
-            'departments'
-        ));
+        return view('students.edit', compact('student', 'departments'));
     }
 
-
-
-    // Step 4.4: Update Student Data
+    /**
+     * Update Student
+     */
     public function update(Request $request, $id)
     {
-
         $student = Student::findOrFail($id);
-
 
         $request->validate([
-
-            'first_name'=>'required',
-            'last_name'=>'required',
-            'gender'=>'required',
-            'department_id'=>'required',
-            'semester'=>'required'
-
+            'enrollment_no' => 'required|unique:students,enrollment_no,' . $student->id,
+            'first_name'    => 'required|max:100',
+            'last_name'     => 'required|max:100',
+            'gender'        => 'required',
+            'dob'           => 'nullable|date',
+            'mobile'        => 'nullable|max:15',
+            'email'         => 'nullable|email|unique:students,email,' . $student->id,
+            'address'       => 'nullable',
+            'department_id' => 'required|exists:departments,id',
+            'semester'      => 'required|integer',
+            'academic_year' => 'nullable|max:20',
+            'status'        => 'required',
         ]);
-
-
 
         $student->update([
-
-            'first_name'=>$request->first_name,
-            'last_name'=>$request->last_name,
-            'gender'=>$request->gender,
-            'dob'=>$request->dob,
-            'mobile'=>$request->mobile,
-            'email'=>$request->email,
-            'address'=>$request->address,
-            'department_id'=>$request->department_id,
-            'semester'=>$request->semester,
-            'academic_year'=>$request->academic_year
-
+            'enrollment_no' => $request->enrollment_no,
+            'first_name'    => $request->first_name,
+            'last_name'     => $request->last_name,
+            'gender'        => $request->gender,
+            'dob'           => $request->dob,
+            'mobile'        => $request->mobile,
+            'email'         => $request->email,
+            'address'       => $request->address,
+            'department_id' => $request->department_id,
+            'semester'      => $request->semester,
+            'academic_year' => $request->academic_year,
+            'status'        => $request->status,
         ]);
 
-
-
         return redirect()
-        ->route('students.index')
-        ->with('success','Student Updated Successfully');
-
+            ->route('students.index')
+            ->with('success', 'Student Updated Successfully.');
     }
 
-
-
-
-    // Step 4.5: Delete Student
+    /**
+     * Delete Student
+     */
     public function destroy($id)
     {
-
         $student = Student::findOrFail($id);
-
 
         $student->delete();
 
-
-
         return redirect()
-        ->route('students.index')
-        ->with('success','Student Deleted Successfully');
-
+            ->route('students.index')
+            ->with('success', 'Student Deleted Successfully.');
     }
-
 }
