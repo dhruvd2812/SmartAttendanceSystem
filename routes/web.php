@@ -7,9 +7,6 @@ use App\Http\Controllers\StudentController;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Register your web routes here.
-|
 */
 
 // Home Page
@@ -34,6 +31,10 @@ Route::get('/students/create', [StudentController::class, 'create'])
 // Store New Student
 Route::post('/students', [StudentController::class, 'store'])
     ->name('students.store');
+
+// Show Student Details
+Route::get('/students/{student}', [StudentController::class, 'show'])
+    ->name('students.show');
 
 // Show Edit Student Form
 Route::get('/students/{student}/edit', [StudentController::class, 'edit'])

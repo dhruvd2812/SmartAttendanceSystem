@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use App\Models\Department;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class StudentController extends Controller
 {
     /**
-     * Display all students
+     * Display Student List
      */
     public function index()
     {
@@ -34,18 +35,31 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'enrollment_no' => 'required|unique:students,enrollment_no',
-            'first_name'    => 'required|max:100',
-            'last_name'     => 'required|max:100',
-            'gender'        => 'required',
+            'enrollment_no' => 'required|max:50|unique:students,enrollment_no',
+            'first_name'    => 'required|string|max:100',
+            'last_name'     => 'required|string|max:100',
+            'gender'        => 'required|in:Male,Female',
             'dob'           => 'nullable|date',
-            'mobile'        => 'nullable|max:15',
+            'mobile'        => 'nullable|digits_between:10,15',
             'email'         => 'nullable|email|unique:students,email',
-            'address'       => 'nullable',
+            'address'       => 'nullable|string|max:500',
             'department_id' => 'required|exists:departments,id',
-            'semester'      => 'required|integer',
-            'academic_year' => 'nullable|max:20',
+            'semester'      => 'required|integer|min:1|max:8',
+            'academic_year' => 'nullable|string|max:20',
+            'photo'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
+        $photoName = null;
+
+        if ($request->hasFile('photo')) {
+
+            $photoName = time() . '.' . $request->photo->extension();
+
+            $request->photo->move(
+                public_path('uploads/students'),
+                $photoName
+            );
+        }
 
         Student::create([
             'enrollment_no' => $request->enrollment_no,
@@ -59,7 +73,7 @@ class StudentController extends Controller
             'department_id' => $request->department_id,
             'semester'      => $request->semester,
             'academic_year' => $request->academic_year,
-            'photo'         => null,
+            'photo'         => $photoName,
             'qr_unique_id'  => uniqid('STD-'),
             'status'        => 'active',
         ]);
@@ -70,7 +84,7 @@ class StudentController extends Controller
     }
 
     /**
-     * Display Single Student
+     * Show Single Student
      */
     public function show($id)
     {
@@ -80,7 +94,7 @@ class StudentController extends Controller
     }
 
     /**
-     * Show Edit Form
+     * Edit Student Form
      */
     public function edit($id)
     {
@@ -99,19 +113,37 @@ class StudentController extends Controller
         $student = Student::findOrFail($id);
 
         $request->validate([
-            'enrollment_no' => 'required|unique:students,enrollment_no,' . $student->id,
-            'first_name'    => 'required|max:100',
-            'last_name'     => 'required|max:100',
-            'gender'        => 'required',
+            'enrollment_no' => 'required|max:50|unique:students,enrollment_no,' . $student->id,
+            'first_name'    => 'required|string|max:100',
+            'last_name'     => 'required|string|max:100',
+            'gender'        => 'required|in:Male,Female',
             'dob'           => 'nullable|date',
-            'mobile'        => 'nullable|max:15',
+            'mobile'        => 'nullable|digits_between:10,15',
             'email'         => 'nullable|email|unique:students,email,' . $student->id,
-            'address'       => 'nullable',
+            'address'       => 'nullable|string|max:500',
             'department_id' => 'required|exists:departments,id',
-            'semester'      => 'required|integer',
-            'academic_year' => 'nullable|max:20',
-            'status'        => 'required',
+            'semester'      => 'required|integer|min:1|max:8',
+            'academic_year' => 'nullable|string|max:20',
+            'status'        => 'required|in:active,inactive',
+            'photo'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
+        $photoName = $student->photo;
+
+        if ($request->hasFile('photo')) {
+
+            if ($student->photo && File::exists(public_path('uploads/students/' . $student->photo))) {
+
+                File::delete(public_path('uploads/students/' . $student->photo));
+            }
+
+            $photoName = time() . '.' . $request->photo->extension();
+
+            $request->photo->move(
+                public_path('uploads/students'),
+                $photoName
+            );
+        }
 
         $student->update([
             'enrollment_no' => $request->enrollment_no,
@@ -125,6 +157,7 @@ class StudentController extends Controller
             'department_id' => $request->department_id,
             'semester'      => $request->semester,
             'academic_year' => $request->academic_year,
+            'photo'         => $photoName,
             'status'        => $request->status,
         ]);
 
@@ -139,6 +172,11 @@ class StudentController extends Controller
     public function destroy($id)
     {
         $student = Student::findOrFail($id);
+
+        if ($student->photo && File::exists(public_path('uploads/students/' . $student->photo))) {
+
+            File::delete(public_path('uploads/students/' . $student->photo));
+        }
 
         $student->delete();
 

@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
 
-<title>Students</title>
+    <meta charset="UTF-8">
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student List</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
 
@@ -12,122 +17,180 @@
 
 <div class="container mt-5">
 
+    <div class="card shadow">
 
-<h2>Student List</h2>
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
 
+            <h3 class="mb-0">Student List</h3>
 
-<a href="{{route('students.create')}}" 
-class="btn btn-primary mb-3">
+            <a href="{{ route('students.create') }}" class="btn btn-light">
+                Add Student
+            </a>
 
-Add Student
+        </div>
 
-</a>
+        <div class="card-body">
 
+            @if(session('success'))
 
-@if(session('success'))
+                <div class="alert alert-success">
 
-<div class="alert alert-success">
+                    {{ session('success') }}
 
-{{session('success')}}
+                </div>
 
-</div>
+            @endif
 
-@endif
+            <table class="table table-bordered table-striped table-hover">
 
+                <thead class="table-dark">
 
-<table class="table table-bordered">
+                <tr>
 
+                    <th>ID</th>
 
-<tr>
+                    <th>Photo</th>
 
-<th>ID</th>
-<th>Enrollment</th>
-<th>Name</th>
-<th>Department</th>
-<th>Semester</th>
-<th>Status</th>
-<th>Action</th>
+                    <th>Enrollment No</th>
 
-</tr>
+                    <th>Student Name</th>
 
+                    <th>Department</th>
 
-@foreach($students as $student)
+                    <th>Semester</th>
 
+                    <th>Status</th>
 
-<tr>
+                    <th width="220">Action</th>
 
-<td>{{$student->id}}</td>
+                </tr>
 
-<td>{{$student->enrollment_no}}</td>
+                </thead>
 
-<td>
-{{$student->first_name}}
-{{$student->last_name}}
-</td>
+                <tbody>
 
+                @forelse($students as $student)
 
-<td>
+                    <tr>
 
-{{$student->department->department_name ?? 'N/A'}}
+                        <td>{{ $student->id }}</td>
 
-</td>
+                        <td>
 
+                            @if($student->photo)
 
-<td>
+                                <img src="{{ asset('uploads/students/'.$student->photo) }}"
+                                     width="60"
+                                     height="60"
+                                     class="rounded">
 
-{{$student->semester}}
+                            @else
 
-</td>
+                                No Photo
 
+                            @endif
 
-<td>
+                        </td>
 
+                        <td>{{ $student->enrollment_no }}</td>
 
-<a href="{{route('students.edit',$student->id)}}"
-class="btn btn-warning btn-sm">
+                        <td>
 
-Edit
+                            {{ $student->first_name }}
 
-</a>
+                            {{ $student->last_name }}
 
+                        </td>
 
+                        <td>
 
-<form action="{{route('students.destroy',$student->id)}}"
-method="POST"
-style="display:inline;">
+                            {{ $student->department->name ?? 'N/A' }}
 
+                        </td>
 
-@csrf
+                        <td>
 
-@method('DELETE')
+                            Semester {{ $student->semester }}
 
+                        </td>
 
-<button type="submit"
-class="btn btn-danger btn-sm"
-onclick="return confirm('Are you sure?')">
+                        <td>
 
-Delete
+                            @if($student->status == 'active')
 
-</button>
+                                <span class="badge bg-success">Active</span>
 
+                            @else
 
-</form>
+                                <span class="badge bg-danger">Inactive</span>
 
+                            @endif
 
+                        </td>
 
-</td>
+                        <td>
 
+                            <a href="{{ route('students.show',$student->id) }}"
+                               class="btn btn-info btn-sm">
 
-</tr>
+                                View
 
+                            </a>
 
-@endforeach
+                            <a href="{{ route('students.edit',$student->id) }}"
+                               class="btn btn-warning btn-sm">
 
+                                Edit
 
-</table>
+                            </a>
 
+                            <form action="{{ route('students.destroy',$student->id) }}"
+                                  method="POST"
+                                  style="display:inline;">
+
+                                @csrf
+
+                                @method('DELETE')
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Are you sure you want to delete this student?')">
+
+                                    Delete
+
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+
+                        <td colspan="8" class="text-center">
+
+                            No Students Found
+
+                        </td>
+
+                    </tr>
+
+                @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 
 </body>
+
 </html>
