@@ -98,7 +98,7 @@
 
                                 <option value="{{ $department->id }}">
 
-                                    {{ $department->name }}
+                                    {{ $department->department_name }} ({{ $department->department_code }})
 
                                 </option>
 

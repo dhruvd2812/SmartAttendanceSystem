@@ -153,7 +153,7 @@
                                 <option value="{{ $department->id }}"
                                     {{ $student->department_id==$department->id ? 'selected' : '' }}>
 
-                                    {{ $department->name }}
+                                    {{ $department->department_name }} ({{ $department->department_code }})
 
                                 </option>
 

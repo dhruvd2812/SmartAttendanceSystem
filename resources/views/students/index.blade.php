@@ -104,7 +104,7 @@
 
                         <td>
 
-                            {{ $student->department->name ?? 'N/A' }}
+                            {{ $student->department->department_name ?? 'N/A' }}
 
                         </td>
 
