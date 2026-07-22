@@ -24,7 +24,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        $departments = Department::orderBy('name')->get();
+        $departments = Department::orderBy('COMPUTER DEPARTMENT')->get();
 
         return view('students.create', compact('departments'));
     }
@@ -32,57 +32,66 @@ class StudentController extends Controller
     /**
      * Store Student
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'enrollment_no' => 'required|max:50|unique:students,enrollment_no',
-            'first_name'    => 'required|string|max:100',
-            'last_name'     => 'required|string|max:100',
-            'gender'        => 'required|in:Male,Female',
-            'dob'           => 'nullable|date',
-            'mobile'        => 'nullable|digits_between:10,15',
-            'email'         => 'nullable|email|unique:students,email',
-            'address'       => 'nullable|string|max:500',
-            'department_id' => 'required|exists:departments,id',
-            'semester'      => 'required|integer|min:1|max:8',
-            'academic_year' => 'nullable|string|max:20',
-            'photo'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+    /**
+ * Store Student
+ */
+public function store(Request $request)
+{
+    // Debug: Display submitted form data
+    dd($request->all());
 
-        $photoName = null;
+    // Validation
+    $request->validate([
+        'enrollment_no' => 'required|max:50|unique:students,enrollment_no',
+        'first_name'    => 'required|string|max:100',
+        'last_name'     => 'required|string|max:100',
+        'gender'        => 'required|in:Male,Female',
+        'dob'           => 'nullable|date',
+        'mobile'        => 'nullable|digits_between:10,15',
+        'email'         => 'nullable|email|unique:students,email',
+        'address'       => 'nullable|string|max:500',
+        'department_id' => 'required|exists:departments,id',
+        'semester'      => 'required|integer|min:1|max:8',
+        'academic_year' => 'nullable|string|max:20',
+        'photo'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
 
-        if ($request->hasFile('photo')) {
+    // Upload Photo
+    $photoName = null;
 
-            $photoName = time() . '.' . $request->photo->extension();
+    if ($request->hasFile('photo')) {
 
-            $request->photo->move(
-                public_path('uploads/students'),
-                $photoName
-            );
-        }
+        $photoName = time() . '.' . $request->photo->extension();
 
-        Student::create([
-            'enrollment_no' => $request->enrollment_no,
-            'first_name'    => $request->first_name,
-            'last_name'     => $request->last_name,
-            'gender'        => $request->gender,
-            'dob'           => $request->dob,
-            'mobile'        => $request->mobile,
-            'email'         => $request->email,
-            'address'       => $request->address,
-            'department_id' => $request->department_id,
-            'semester'      => $request->semester,
-            'academic_year' => $request->academic_year,
-            'photo'         => $photoName,
-            'qr_unique_id'  => uniqid('STD-'),
-            'status'        => 'active',
-        ]);
-
-        return redirect()
-            ->route('students.index')
-            ->with('success', 'Student Added Successfully.');
+        $request->photo->move(
+            public_path('uploads/students'),
+            $photoName
+        );
     }
 
+    // Save Student
+    Student::create([
+        'enrollment_no' => $request->enrollment_no,
+        'first_name'    => $request->first_name,
+        'last_name'     => $request->last_name,
+        'gender'        => $request->gender,
+        'dob'           => $request->dob,
+        'mobile'        => $request->mobile,
+        'email'         => $request->email,
+        'address'       => $request->address,
+        'department_id' => $request->department_id,
+        'semester'      => $request->semester,
+        'academic_year' => $request->academic_year,
+        'photo'         => $photoName,
+        'qr_unique_id'  => uniqid('STD-'),
+        'status'        => 'active',
+    ]);
+
+    // Redirect
+    return redirect()
+        ->route('students.index')
+        ->with('success', 'Student Added Successfully.');
+}
     /**
      * Show Single Student
      */
@@ -96,15 +105,14 @@ class StudentController extends Controller
     /**
      * Edit Student Form
      */
-    public function edit($id)
-    {
-        $student = Student::findOrFail($id);
+   public function edit($id)
+{
+    $student = Student::findOrFail($id);
 
-        $departments = Department::orderBy('name')->get();
+    $departments = Department::orderBy('COMPUTER DEPARTMENT')->get();
 
-        return view('students.edit', compact('student', 'departments'));
-    }
-
+    return view('students.edit', compact('student', 'departments'));
+}
     /**
      * Update Student
      */
