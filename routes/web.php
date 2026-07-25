@@ -2,21 +2,30 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\StudentController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application.
-|
-*/
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 // Department Routes
-Route::get('/departments', [DepartmentController::class, 'index']);
-Route::get('/departments/create', [DepartmentController::class, 'create']);
-Route::post('/departments', [DepartmentController::class, 'store']);
+Route::get('/departments', [DepartmentController::class, 'index'])
+    ->name('departments.index');
+
+Route::get('/departments/create', [DepartmentController::class, 'create'])
+    ->name('departments.create');
+
+Route::post('/departments', [DepartmentController::class, 'store'])
+    ->name('departments.store');
+
+Route::get('/departments/{department}/edit', [DepartmentController::class, 'edit'])
+    ->name('departments.edit');
+
+Route::put('/departments/{department}', [DepartmentController::class, 'update'])
+    ->name('departments.update');
+
+Route::delete('/departments/{department}', [DepartmentController::class, 'destroy'])
+    ->name('departments.destroy');
+
+Route::resource('students', StudentController::class);

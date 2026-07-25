@@ -25,4 +25,30 @@ class DepartmentController extends Controller
 
         return redirect('/departments');
     }
+
+    public function edit(Department $department)
+    {
+        return view('departments.edit', compact('department'));
+    }
+
+    public function update(Request $request, Department $department)
+    {
+        $request->validate([
+            'department_name' => 'required|string|max:255',
+            'department_code' => 'required|string|max:50',
+        ]);
+
+        $department->update($request->all());
+
+        return redirect()->route('departments.index')
+            ->with('success', 'Department updated successfully.');
+    }
+
+    public function destroy(Department $department)
+    {
+        $department->delete();
+
+        return redirect()->route('departments.index')
+            ->with('success', 'Department deleted successfully.');
+    }
 }
