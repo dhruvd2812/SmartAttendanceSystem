@@ -38,7 +38,7 @@ class StudentController extends Controller
 public function store(Request $request)
 {
     // Debug: Display submitted form data
-    dd($request->all());
+    // dd($request->all());
 
     // Validation
     $request->validate([
