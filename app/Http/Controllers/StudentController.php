@@ -24,7 +24,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        $departments = Department::orderBy('COMPUTER DEPARTMENT')->get();
+        $departments = Department::orderBy('department_name')->get();
 
         return view('students.create', compact('departments'));
     }
@@ -37,9 +37,6 @@ class StudentController extends Controller
  */
 public function store(Request $request)
 {
-    // Debug: Display submitted form data
-    dd($request->all());
-
     // Validation
     $request->validate([
         'enrollment_no' => 'required|max:50|unique:students,enrollment_no',
@@ -109,7 +106,7 @@ public function store(Request $request)
 {
     $student = Student::findOrFail($id);
 
-    $departments = Department::orderBy('COMPUTER DEPARTMENT')->get();
+    $departments = Department::orderBy('department_name')->get();
 
     return view('students.edit', compact('student', 'departments'));
 }
