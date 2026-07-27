@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DepartmentController;
-<<<<<<< Updated upstream
+
 
 /*
 |--------------------------------------------------------------------------
@@ -12,10 +12,8 @@ use App\Http\Controllers\DepartmentController;
 | Here is where you can register web routes for your application.
 |
 */
-=======
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\AttendanceSessionController;
->>>>>>> Stashed changes
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,11 +21,11 @@ Route::get('/', function () {
 
 // ===========================
 // Department Routes
-<<<<<<< Updated upstream
+
 Route::get('/departments', [DepartmentController::class, 'index']);
 Route::get('/departments/create', [DepartmentController::class, 'create']);
 Route::post('/departments', [DepartmentController::class, 'store']);
-=======
+
 // ===========================
 Route::get('/departments', [DepartmentController::class, 'index'])
     ->name('departments.index');
@@ -63,4 +61,4 @@ Route::get('/attendance-sessions/create', [AttendanceSessionController::class, '
 
 Route::post('/attendance-sessions', [AttendanceSessionController::class, 'store'])
     ->name('attendance-sessions.store');
->>>>>>> Stashed changes
+
