@@ -12,15 +12,15 @@ return new class extends Migration
 
             $table->id();
 
-            $table->string('name');
+            $table->string('name')->nullable();
 
-            $table->string('code')->unique();
+            $table->string('code')->nullable()->unique();
 
-            $table->string('hod_name');
+            $table->string('hod_name')->nullable();
 
-            $table->string('email')->unique();
+            $table->string('email')->nullable()->unique();
 
-            $table->string('phone',15);
+            $table->string('phone',15)->nullable();
 
             $table->text('description')->nullable();
 
