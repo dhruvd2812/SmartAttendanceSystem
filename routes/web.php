@@ -1,47 +1,73 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\StudentController;
 use App\Http\Controllers\FacultyController;
+use App\Http\Controllers\QrController;
+use App\Http\Controllers\StudentController;
+
+/*
+|--------------------------------------------------------------------------
+| Home
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 /*
 |--------------------------------------------------------------------------
-| Department Routes
+| Authentication
 |--------------------------------------------------------------------------
 */
-Route::get('/departments', [DepartmentController::class, 'index'])
-    ->name('departments.index');
 
-Route::get('/departments/create', [DepartmentController::class, 'create'])
-    ->name('departments.create');
+// Login
+Route::get('/login', [AuthController::class, 'showLogin'])
+    ->name('login');
 
-Route::post('/departments', [DepartmentController::class, 'store'])
-    ->name('departments.store');
+Route::post('/login', [AuthController::class, 'login'])
+    ->name('login.store');
 
-Route::get('/departments/{department}/edit', [DepartmentController::class, 'edit'])
-    ->name('departments.edit');
+// Register
+Route::get('/register', [AuthController::class, 'showRegister'])
+    ->name('register');
 
-Route::put('/departments/{department}', [DepartmentController::class, 'update'])
-    ->name('departments.update');
+Route::post('/register', [AuthController::class, 'register'])
+    ->name('register.store');
 
-Route::delete('/departments/{department}', [DepartmentController::class, 'destroy'])
-    ->name('departments.destroy');
+// Logout
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('logout');
 
 /*
 |--------------------------------------------------------------------------
-| Student Routes
+| Protected Routes
 |--------------------------------------------------------------------------
 */
-Route::resource('students', StudentController::class);
 
-/*
-|--------------------------------------------------------------------------
-| Faculty Routes
-|--------------------------------------------------------------------------
-*/
-Route::resource('faculties', FacultyController::class);
+Route::middleware('auth')->group(function () {
+
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+
+    // Departments
+    Route::resource('departments', DepartmentController::class);
+
+    // Students
+    Route::resource('students', StudentController::class);
+
+    // Faculties
+    Route::resource('faculties', FacultyController::class);
+
+    // QR Generator
+    Route::get('/qr-generator', [QrController::class, 'index'])
+        ->name('qr.index');
+
+    Route::post('/qr-generator', [QrController::class, 'generate'])
+        ->name('qr.generate');
+});
