@@ -7,24 +7,50 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Add the fields used by the department form and listing.
+     * Run the migrations.
      */
     public function up(): void
     {
         Schema::table('departments', function (Blueprint $table) {
-            $table->string('department_name', 100)->nullable()->after('id');
-            $table->string('department_code', 10)->nullable()->unique()->after('department_name');
+
+            // Add only missing columns
+
+            if (!Schema::hasColumn('departments', 'department_code')) {
+                $table->string('department_code')->nullable();
+            }
+
+            if (!Schema::hasColumn('departments', 'hod_name')) {
+                $table->string('hod_name')->nullable();
+            }
+
+            if (!Schema::hasColumn('departments', 'department_email')) {
+                $table->string('department_email')->nullable();
+            }
+
+            if (!Schema::hasColumn('departments', 'department_phone')) {
+                $table->string('department_phone')->nullable();
+            }
+
+            if (!Schema::hasColumn('departments', 'description')) {
+                $table->text('description')->nullable();
+            }
         });
     }
 
     /**
-     * Reverse the migration.
+     * Reverse the migrations.
      */
     public function down(): void
     {
         Schema::table('departments', function (Blueprint $table) {
-            $table->dropUnique(['department_code']);
-            $table->dropColumn(['department_name', 'department_code']);
+
+            $table->dropColumn([
+                'department_code',
+                'hod_name',
+                'department_email',
+                'department_phone',
+                'description'
+            ]);
         });
     }
 };
