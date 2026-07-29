@@ -31,9 +31,4 @@ class Department extends Model
     {
         return $this->hasMany(Student::class, 'department_id', 'id');
     }
-
-    public function faculties()
-{
-    return $this->hasMany(Faculty::class);
-}
 }
