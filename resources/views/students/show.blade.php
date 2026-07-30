@@ -1,97 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Details</title>
+﻿@extends('layouts.app')
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+@section('title', 'Student Details | Smart Attendance')
 
-<div class="container mt-5">
+@section('content')
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <section class="card app-card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
+                        <div>
+                            <h1 class="h4 mb-1">Student Details</h1>
+                            <p class="text-muted small mb-0">Review the selected student information.</p>
+                        </div>
+                        <a href="{{ route('students.index') }}" class="btn btn-soft-primary">Back to students</a>
+                    </div>
 
-    <div class="card shadow">
-
-        <div class="card-header bg-primary text-white">
-            <h3>Student Details</h3>
+                    <div class="table-responsive">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                                <tr><th class="px-0 py-2">Enrollment No</th><td class="py-2">{{ $student->enrollment_no }}</td></tr>
+                                <tr><th class="px-0 py-2">First Name</th><td class="py-2">{{ $student->first_name }}</td></tr>
+                                <tr><th class="px-0 py-2">Last Name</th><td class="py-2">{{ $student->last_name }}</td></tr>
+                                <tr><th class="px-0 py-2">Gender</th><td class="py-2">{{ $student->gender }}</td></tr>
+                                <tr><th class="px-0 py-2">Date of Birth</th><td class="py-2">{{ $student->dob }}</td></tr>
+                                <tr><th class="px-0 py-2">Mobile</th><td class="py-2">{{ $student->mobile }}</td></tr>
+                                <tr><th class="px-0 py-2">Email</th><td class="py-2">{{ $student->email }}</td></tr>
+                                <tr><th class="px-0 py-2">Address</th><td class="py-2">{{ $student->address }}</td></tr>
+                                <tr><th class="px-0 py-2">Department</th><td class="py-2">{{ $student->department->department_name ?? 'N/A' }}</td></tr>
+                                <tr><th class="px-0 py-2">Semester</th><td class="py-2">{{ $student->semester }}</td></tr>
+                                <tr><th class="px-0 py-2">Academic Year</th><td class="py-2">{{ $student->academic_year }}</td></tr>
+                                <tr><th class="px-0 py-2">Status</th><td class="py-2">{{ ucfirst($student->status) }}</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
         </div>
-
-        <div class="card-body">
-
-            <table class="table table-bordered">
-
-                <tr>
-                    <th>Enrollment No</th>
-                    <td>{{ $student->enrollment_no }}</td>
-                </tr>
-
-                <tr>
-                    <th>First Name</th>
-                    <td>{{ $student->first_name }}</td>
-                </tr>
-
-                <tr>
-                    <th>Last Name</th>
-                    <td>{{ $student->last_name }}</td>
-                </tr>
-
-                <tr>
-                    <th>Gender</th>
-                    <td>{{ $student->gender }}</td>
-                </tr>
-
-                <tr>
-                    <th>Date of Birth</th>
-                    <td>{{ $student->dob }}</td>
-                </tr>
-
-                <tr>
-                    <th>Mobile</th>
-                    <td>{{ $student->mobile }}</td>
-                </tr>
-
-                <tr>
-                    <th>Email</th>
-                    <td>{{ $student->email }}</td>
-                </tr>
-
-                <tr>
-                    <th>Address</th>
-                    <td>{{ $student->address }}</td>
-                </tr>
-
-                <tr>
-                    <th>Department</th>
-                    <td>{{ $student->department->department_name ?? 'N/A' }}</td>
-                </tr>
-
-                <tr>
-                    <th>Semester</th>
-                    <td>{{ $student->semester }}</td>
-                </tr>
-
-                <tr>
-                    <th>Academic Year</th>
-                    <td>{{ $student->academic_year }}</td>
-                </tr>
-
-                <tr>
-                    <th>Status</th>
-                    <td>{{ $student->status }}</td>
-                </tr>
-
-            </table>
-
-            <a href="{{ route('students.index') }}" class="btn btn-secondary">
-                Back
-            </a>
-
-        </div>
-
     </div>
-
-</div>
-
-</body>
-</html>
+@endsection
