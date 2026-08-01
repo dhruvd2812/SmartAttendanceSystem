@@ -33,8 +33,6 @@ class FacultyController extends Controller
      */
 public function store(Request $request)
 {
-    dd($request->all());
-
     $request->validate([
         'faculty_name'  => 'required',
         'employee_id'   => 'required|unique:faculties',
@@ -52,7 +50,7 @@ public function store(Request $request)
     ]);
 
     return redirect()->route('faculties.index')
-                     ->with('success','Faculty Added Successfully');
+                     ->with('success', 'Faculty Added Successfully');
 }
 
     /**
