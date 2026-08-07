@@ -76,8 +76,7 @@ class StudentController extends Controller
     public function edit($id)
     {
         $student = Student::findOrFail($id);
-        $departments = Department::orderBy('department_name')->get();
-
+        $departments = Department::orderBy('name')->get();
         return view('students.edit', compact('student', 'departments'));
     }
 
