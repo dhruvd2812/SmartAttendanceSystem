@@ -4,9 +4,12 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FacultyController;
+use App\Http\Controllers\FacultyDashboardController;
 use App\Http\Controllers\QrController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\StudentDashboardController;
+use App\Http\Controllers\StudentAttendanceController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -53,12 +56,47 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Dashboard
+    | Admin Dashboard
     |--------------------------------------------------------------------------
     */
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Student Dashboard
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])
+        ->name('student.dashboard');
+
+    Route::get('/student/profile', [StudentDashboardController::class, 'profile'])
+        ->name('student.profile');
+
+    Route::get('/student/attendance', [StudentAttendanceController::class, 'index'])
+        ->name('student.attendance');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Student QR Scanner
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/student/scan-qr', [QrController::class, 'scan'])
+        ->name('student.scan-qr');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Faculty Dashboard
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/faculty/dashboard', [FacultyDashboardController::class, 'index'])
+        ->name('faculty.dashboard');
 
 
     /*
