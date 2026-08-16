@@ -21,13 +21,40 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
-            return back()->withErrors(['email' => 'The provided email or password is incorrect.'])->onlyInput('email');
+        if (!Auth::attempt($credentials, $request->boolean('remember'))) {
+            return back()
+                ->withErrors([
+                    'email' => 'The provided email or password is incorrect.'
+                ])
+                ->onlyInput('email');
         }
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard'));
+        $user = Auth::user();
+
+        // STUDENT
+        if ($user->role === 'student') {
+            return redirect()->route('student.dashboard');
+        }
+
+        // FACULTY
+        if ($user->role === 'faculty') {
+            return redirect()->route('faculty.dashboard');
+        }
+
+        // ADMIN
+        if ($user->role === 'admin') {
+            return redirect()->route('dashboard');
+        }
+
+        // INVALID ROLE
+        Auth::logout();
+
+        return redirect()->route('login')
+            ->withErrors([
+                'email' => 'Your account does not have a valid role.'
+            ]);
     }
 
     public function showRegister()
@@ -50,17 +77,21 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
+
         $request->session()->regenerate();
 
-        return redirect()->route('dashboard')->with('success', 'Your administrator account has been created.');
+        return redirect()->route('dashboard')
+            ->with('success', 'Your administrator account has been created.');
     }
 
     public function logout(Request $request)
     {
         Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('success', 'You have been logged out.');
+        return redirect()->route('login')
+            ->with('success', 'You have been logged out.');
     }
 }
