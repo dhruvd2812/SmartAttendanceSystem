@@ -2,56 +2,53 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AttendanceSession extends Model
 {
+    use HasFactory;
+
     protected $table = 'attendance_sessions';
 
     protected $fillable = [
-        'faculty_id',
         'subject_id',
-        'department_id',
-        'semester',
-        'session_date',
-        'starts_at',
-        'expires_at',
-        'token',
+        'faculty_id',
+        'lecture_date',
+        'start_time',
+        'end_time',
+        'lecture_name',
+        'qr_token',
+        'qr_expires_at',
         'status',
     ];
 
     protected $casts = [
-        'session_date' => 'date',
-        'starts_at' => 'datetime',
-        'expires_at' => 'datetime',
+        'lecture_date' => 'date',
+        'qr_expires_at' => 'datetime',
     ];
 
-    public function faculty(): BelongsTo
-    {
-        return $this->belongsTo(
-            Faculty::class,
-            'faculty_id'
-        );
-    }
-
+    /**
+     * Subject for this lecture.
+     */
     public function subject(): BelongsTo
     {
-        return $this->belongsTo(
-            Subject::class,
-            'subject_id'
-        );
+        return $this->belongsTo(Subject::class);
     }
 
-    public function department(): BelongsTo
+    /**
+     * Faculty who conducted the lecture.
+     */
+    public function faculty(): BelongsTo
     {
-        return $this->belongsTo(
-            Department::class,
-            'department_id'
-        );
+        return $this->belongsTo(Faculty::class);
     }
 
+    /**
+     * Attendance records for this lecture.
+     */
     public function attendances(): HasMany
     {
         return $this->hasMany(

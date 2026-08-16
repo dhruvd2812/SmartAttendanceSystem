@@ -6,11 +6,17 @@ use Illuminate\Http\Request;
 
 class QrController extends Controller
 {
+    /**
+     * Display QR generator page.
+     */
     public function index()
     {
         return view('qr.index');
     }
 
+    /**
+     * Generate QR Code.
+     */
     public function generate(Request $request)
     {
         $request->validate([
@@ -20,7 +26,7 @@ class QrController extends Controller
         ]);
 
         $data = json_encode([
-            "session_id" => rand(1000,9999),
+            "session_id" => rand(1000, 9999),
             "faculty" => $request->faculty,
             "department" => $request->department,
             "subject" => $request->subject,
@@ -29,8 +35,17 @@ class QrController extends Controller
             "expires" => now()->addMinutes(2)->format('h:i A')
         ]);
 
-        $qr = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=".urlencode($data);
+        $qr = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="
+            . urlencode($data);
 
-        return view('qr.index', compact('qr','data'));
+        return view('qr.index', compact('qr', 'data'));
+    }
+
+    /**
+     * Display QR scanner page for students.
+     */
+    public function scan()
+    {
+        return view('student.scan-qr');
     }
 }

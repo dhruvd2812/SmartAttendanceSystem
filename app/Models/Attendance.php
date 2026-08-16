@@ -2,41 +2,44 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Attendance extends Model
 {
+    use HasFactory;
+
     protected $table = 'attendances';
 
     protected $fillable = [
-        'attendance_session_id',
         'student_id',
-        'scanned_at',
+        'attendance_session_id',
         'status',
-        'latitude',
-        'longitude',
+        'marked_at',
+        'remarks',
     ];
 
     protected $casts = [
-        'scanned_at' => 'datetime',
-        'latitude' => 'decimal:7',
-        'longitude' => 'decimal:7',
+        'marked_at' => 'datetime',
     ];
 
-    public function session(): BelongsTo
+    /**
+     * Student who owns this attendance record.
+     */
+    public function student(): BelongsTo
+    {
+        return $this->belongsTo(Student::class);
+    }
+
+    /**
+     * Attendance session for this record.
+     */
+    public function attendanceSession(): BelongsTo
     {
         return $this->belongsTo(
             AttendanceSession::class,
             'attendance_session_id'
-        );
-    }
-
-    public function student(): BelongsTo
-    {
-        return $this->belongsTo(
-            Student::class,
-            'student_id'
         );
     }
 }
