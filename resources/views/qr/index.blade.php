@@ -1,54 +1,228 @@
 ﻿@extends('layouts.app')
 
-@section('title', 'QR Attendance Generator | Smart Attendance')
+@section('title', 'QR Generator | Smart Attendance')
 
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <section class="card app-card border-0 shadow-lg">
-                <div class="card-body p-4 p-md-5">
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
-                        <div>
-                            <h1 class="h4 mb-1">QR Attendance Generator</h1>
-                            <p class="text-muted small mb-0">Generate a QR code for attendance sessions.</p>
-                        </div>
-                        <span class="badge bg-primary bg-opacity-10 text-primary">Valid for 2 minutes</span>
-                    </div>
 
-                    <form method="POST" action="{{ route('qr.generate') }}">
+<div class="container py-4">
+
+    {{-- Page Header --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">QR Code Generator</h2>
+            <p class="text-muted mb-0">
+                Generate a QR code for student attendance.
+            </p>
+        </div>
+
+        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Back to Dashboard
+        </a>
+    </div>
+
+
+    {{-- Success Message --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show">
+            {{ session('success') }}
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    @endif
+
+
+    {{-- Validation Errors --}}
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <strong>Please fix the following errors:</strong>
+
+            <ul class="mb-0 mt-2">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+
+    <div class="row g-4">
+
+        {{-- QR Generator Form --}}
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-qr-code"></i>
+                        Generate Attendance QR
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <form action="{{ route('admin.qr.generate') }}"
+                          method="POST">
+
                         @csrf
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-4">
-                                <label class="form-label">Faculty</label>
-                                <input type="text" name="faculty" class="form-control" placeholder="Dr. Patel" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Department</label>
-                                <input type="text" name="department" class="form-control" placeholder="Computer" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Subject</label>
-                                <input type="text" name="subject" class="form-control" placeholder="DBMS" required>
-                            </div>
+
+
+                        {{-- Subject --}}
+                        <div class="mb-3">
+
+                            <label for="subject" class="form-label fw-semibold">
+                                Subject
+                            </label>
+
+                            <input
+                                type="text"
+                                name="subject"
+                                id="subject"
+                                class="form-control"
+                                placeholder="Enter subject name"
+                                value="{{ old('subject') }}"
+                                required
+                            >
+
                         </div>
-                        <button class="btn btn-primary">Generate QR</button>
+
+
+                        {{-- Lecture Date --}}
+                        <div class="mb-3">
+
+                            <label for="date" class="form-label fw-semibold">
+                                Date
+                            </label>
+
+                            <input
+                                type="date"
+                                name="date"
+                                id="date"
+                                class="form-control"
+                                value="{{ old('date', date('Y-m-d')) }}"
+                                required
+                            >
+
+                        </div>
+
+
+                        {{-- Start Time --}}
+                        <div class="mb-3">
+
+                            <label for="start_time" class="form-label fw-semibold">
+                                Start Time
+                            </label>
+
+                            <input
+                                type="time"
+                                name="start_time"
+                                id="start_time"
+                                class="form-control"
+                                value="{{ old('start_time') }}"
+                                required
+                            >
+
+                        </div>
+
+
+                        {{-- End Time --}}
+                        <div class="mb-3">
+
+                            <label for="end_time" class="form-label fw-semibold">
+                                End Time
+                            </label>
+
+                            <input
+                                type="time"
+                                name="end_time"
+                                id="end_time"
+                                class="form-control"
+                                value="{{ old('end_time') }}"
+                                required
+                            >
+
+                        </div>
+
+
+                        {{-- Generate Button --}}
+                        <div class="d-grid">
+
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg">
+
+                                <i class="bi bi-qr-code"></i>
+                                Generate QR Code
+
+                            </button>
+
+                        </div>
+
                     </form>
 
-                    @if(isset($qr))
-                        <div class="row align-items-center mt-5 gy-4">
-                            <div class="col-md-5 text-center">
-                                <img src="{{ $qr }}" class="img-fluid rounded app-card" alt="QR Code">
-                            </div>
-                            <div class="col-md-7">
-                                <div class="alert alert-success shadow-sm">
-                                    <h5 class="mb-2">Attendance Session Created</h5>
-                                    <pre class="mb-0">{{ $data }}</pre>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
                 </div>
-            </section>
+
+            </div>
+
         </div>
+
+
+        {{-- Generated QR --}}
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-qr-code-scan"></i>
+                        QR Code
+                    </h5>
+                </div>
+
+                <div class="card-body text-center">
+
+                    @if(isset($qrCode))
+
+                        <div class="mb-3">
+                            {!! $qrCode !!}
+                        </div>
+
+                        <p class="text-muted">
+                            Students can scan this QR code to mark attendance.
+                        </p>
+
+                    @else
+
+                        <div class="py-5">
+
+                            <i class="bi bi-qr-code"
+                               style="font-size: 80px; opacity: .25;">
+                            </i>
+
+                            <h5 class="mt-3 text-muted">
+                                No QR Code Generated
+                            </h5>
+
+                            <p class="text-muted">
+                                Fill the form and click
+                                <strong>Generate QR Code</strong>.
+                            </p>
+
+                        </div>
+
+                    @endif
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
+
+</div>
+
 @endsection

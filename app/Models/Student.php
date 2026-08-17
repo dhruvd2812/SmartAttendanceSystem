@@ -4,88 +4,89 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Student extends Model
 {
     use HasFactory;
 
-    /**
-     * Database table.
-     */
-    protected $table = 'students';
+    /*
+    |--------------------------------------------------------------------------
+    | Mass Assignable Fields
+    |--------------------------------------------------------------------------
+    */
 
-    /**
-     * Primary key.
-     */
-    protected $primaryKey = 'id';
-
-    /**
-     * Mass assignable fields.
-     */
     protected $fillable = [
-        'enrollment_no',
-        'first_name',
-        'last_name',
-        'gender',
-        'dob',
-        'mobile',
+        'name',
         'email',
-        'address',
+        'phone',
+        'gender',
+        'date_of_birth',
         'department_id',
-        'semester',
-        'academic_year',
-        'photo',
-        'qr_unique_id',
-        'status',
     ];
 
-    /**
-     * Student belongs to a Department.
-     */
-    public function department(): BelongsTo
+
+    /*
+    |--------------------------------------------------------------------------
+    | Department Relationship
+    |--------------------------------------------------------------------------
+    |
+    | A student belongs to one department.
+    |
+    */
+
+    public function department()
     {
         return $this->belongsTo(
             Department::class,
-            'department_id',
-            'id'
+            'department_id'
         );
     }
 
-    /**
-     * Student has one User account.
-     */
-    public function user(): HasOne
+
+    /*
+    |--------------------------------------------------------------------------
+    | User Relationship
+    |--------------------------------------------------------------------------
+    |
+    | Each student has one login account in users table.
+    |
+    */
+
+    public function user()
     {
         return $this->hasOne(
             User::class,
-            'student_id',
-            'id'
+            'student_id'
         );
     }
 
-    /**
- * Student has many attendance records.
- */
-public function attendances(): HasMany
-{
-    return $this->hasMany(
-        Attendance::class,
-        'student_id',
-        'id'
-    );
-}
-/**
- * Student has many class assignments.
- */
-public function studentClasses(): HasMany
-{
-    return $this->hasMany(
-        StudentClass::class,
-        'student_id',
-        'id'
-    );
-}
+
+    /*
+    |--------------------------------------------------------------------------
+    | Attendance Relationship
+    |--------------------------------------------------------------------------
+    */
+
+    public function attendances()
+    {
+        return $this->hasMany(
+            Attendance::class,
+            'student_id'
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Student Classes Relationship
+    |--------------------------------------------------------------------------
+    */
+
+    public function studentClasses()
+    {
+        return $this->hasMany(
+            StudentClass::class,
+            'student_id'
+        );
+    }
 }

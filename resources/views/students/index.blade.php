@@ -3,70 +3,206 @@
 @section('title', 'Students | Smart Attendance')
 
 @section('content')
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
+
+<div class="container py-4">
+
+    {{-- Header --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <p class="text-muted mb-1">Student Management</p>
-            <h1 class="h3 mb-0">Students</h1>
+            <h2 class="fw-bold mb-1">Students</h2>
+            <p class="text-muted mb-0">
+                Manage all students
+            </p>
         </div>
-        <a href="{{ route('students.create') }}" class="btn btn-primary">+ Add Student</a>
+
+        {{-- IMPORTANT: Admin route --}}
+        <a href="{{ route('admin.students.create') }}"
+           class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i>
+            Add Student
+        </a>
     </div>
 
-    <section class="card app-card border-0 shadow-sm">
-        <div class="card-body p-4">
-            <div class="table-responsive">
-                <table class="table app-table table-bordered table-hover mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>ID</th>
-                            <th>Photo</th>
-                            <th>Enrollment No</th>
-                            <th>Student Name</th>
-                            <th>Department</th>
-                            <th>Semester</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($students as $student)
+
+    {{-- Success Message --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show">
+            {{ session('success') }}
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    @endif
+
+
+    {{-- Error Message --}}
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show">
+            {{ session('error') }}
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    @endif
+
+
+    {{-- Validation Errors --}}
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <strong>Please fix the following errors:</strong>
+
+            <ul class="mb-0 mt-2">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+
+    {{-- Students Table --}}
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-semibold">
+                Student List
+            </h5>
+        </div>
+
+        <div class="card-body p-0">
+
+            @if($students->count() > 0)
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead class="table-light">
+
                             <tr>
-                                <td>{{ $student->id }}</td>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                                <th>Gender</th>
+                                <th>Phone</th>
+                                <th class="text-center">
+                                    Actions
+                                </th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                        @foreach($students as $student)
+
+                            <tr>
+
                                 <td>
-                                    @if($student->photo)
-                                        <img src="{{ asset('uploads/students/'.$student->photo) }}" width="60" height="60" class="rounded">
-                                    @else
-                                        <span class="text-muted">No Photo</span>
-                                    @endif
+                                    {{ $loop->iteration }}
                                 </td>
-                                <td>{{ $student->enrollment_no }}</td>
-                                <td>{{ $student->first_name }} {{ $student->last_name }}</td>
-                                <td>{{ $student->department->department_name ?? 'N/A' }}</td>
-                                <td>Semester {{ $student->semester }}</td>
+
                                 <td>
-                                    @if($student->status == 'active')
-                                        <span class="badge bg-success">Active</span>
-                                    @else
-                                        <span class="badge bg-danger">Inactive</span>
-                                    @endif
+                                    <strong>
+                                        {{ $student->name }}
+                                    </strong>
                                 </td>
-                                <td class="text-nowrap">
-                                    <a href="{{ route('students.show',$student->id) }}" class="btn btn-info btn-sm">View</a>
-                                    <a href="{{ route('students.edit',$student->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                    <form action="{{ route('students.destroy',$student->id) }}" method="POST" class="d-inline">
+
+                                <td>
+                                    {{ $student->email }}
+                                </td>
+
+                                <td>
+                                    {{ $student->department->name ?? 'N/A' }}
+                                </td>
+
+                                <td>
+                                    {{ ucfirst($student->gender ?? 'N/A') }}
+                                </td>
+
+                                <td>
+                                    {{ $student->phone ?? 'N/A' }}
+                                </td>
+
+                                <td class="text-center">
+
+                                    {{-- View --}}
+                                    <a href="{{ route('admin.students.show', $student->id) }}"
+                                       class="btn btn-sm btn-info text-white">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+
+
+                                    {{-- Edit --}}
+                                    <a href="{{ route('admin.students.edit', $student->id) }}"
+                                       class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
+
+                                    {{-- Delete --}}
+                                    <form action="{{ route('admin.students.destroy', $student->id) }}"
+                                          method="POST"
+                                          class="d-inline">
+
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this student?')">Delete</button>
+
+                                        <button type="submit"
+                                                class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Are you sure you want to delete this student?')">
+
+                                            <i class="fas fa-trash"></i>
+
+                                        </button>
+
                                     </form>
+
                                 </td>
+
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="8" class="text-center py-4 text-muted">No Students Found</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+
+                        @endforeach
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            @else
+
+                <div class="text-center py-5">
+
+                    <i class="fas fa-user-graduate fa-3x text-muted mb-3"></i>
+
+                    <h5>No Students Found</h5>
+
+                    <p class="text-muted">
+                        No students have been added yet.
+                    </p>
+
+                    <a href="{{ route('admin.students.create') }}"
+                       class="btn btn-primary">
+
+                        <i class="fas fa-plus me-1"></i>
+                        Add First Student
+
+                    </a>
+
+                </div>
+
+            @endif
+
         </div>
-    </section>
+
+    </div>
+
+</div>
+
 @endsection

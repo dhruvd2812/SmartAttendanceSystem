@@ -51,7 +51,7 @@ Route::post('/logout', [AuthController::class, 'logout'])
 | ADMIN ROUTES
 |--------------------------------------------------------------------------
 |
-| Admin = Full system authority
+| Admin has full system access.
 |
 */
 
@@ -126,14 +126,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 |--------------------------------------------------------------------------
 | FACULTY ROUTES
 |--------------------------------------------------------------------------
-|
-| Faculty can:
-| - Faculty Dashboard
-| - Students
-| - Attendance
-| - QR Generator
-| - Student information
-|
 */
 
 Route::middleware(['auth', 'role:faculty'])->group(function () {
@@ -154,7 +146,7 @@ Route::middleware(['auth', 'role:faculty'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::resource('/students', StudentController::class)
+    Route::resource('/faculty/students', StudentController::class)
         ->names('faculty.students');
 
 
@@ -164,10 +156,10 @@ Route::middleware(['auth', 'role:faculty'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/qr-generator', [QrController::class, 'index'])
+    Route::get('/faculty/qr-generator', [QrController::class, 'index'])
         ->name('faculty.qr.index');
 
-    Route::post('/qr-generator', [QrController::class, 'generate'])
+    Route::post('/faculty/qr-generator', [QrController::class, 'generate'])
         ->name('faculty.qr.generate');
 
 
@@ -177,10 +169,10 @@ Route::middleware(['auth', 'role:faculty'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/chatbot', [ChatbotController::class, 'index'])
+    Route::get('/faculty/chatbot', [ChatbotController::class, 'index'])
         ->name('faculty.chatbot.index');
 
-    Route::post('/chatbot/message', [ChatbotController::class, 'message'])
+    Route::post('/faculty/chatbot/message', [ChatbotController::class, 'message'])
         ->name('faculty.chatbot.message');
 });
 
@@ -189,9 +181,6 @@ Route::middleware(['auth', 'role:faculty'])->group(function () {
 |--------------------------------------------------------------------------
 | STUDENT ROUTES
 |--------------------------------------------------------------------------
-|
-| Student can ONLY access their own student area.
-|
 */
 
 Route::middleware(['auth', 'role:student'])->group(function () {
