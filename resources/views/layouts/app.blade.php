@@ -73,10 +73,9 @@
             color: var(--color-heading);
         }
 
-
         /* =========================================================
            NAVBAR
-        ========================================================= */
+        ========================================================== */
 
         .app-navbar {
             background: #312e81;
@@ -92,7 +91,6 @@
 
         .app-navbar .nav-link {
             color: rgba(255,255,255,0.85);
-
             transition: color .2s ease;
         }
 
@@ -101,10 +99,9 @@
             color: #ffffff;
         }
 
-
         /* =========================================================
            CARDS
-        ========================================================= */
+        ========================================================== */
 
         .app-card {
             border:
@@ -119,10 +116,9 @@
                 0 24px 50px rgba(15, 23, 42, .08);
         }
 
-
         /* =========================================================
            HERO
-        ========================================================= */
+        ========================================================== */
 
         .app-hero {
             border-radius: 1.75rem;
@@ -140,10 +136,9 @@
                 0 24px 60px rgba(79, 70, 229, .18);
         }
 
-
         /* =========================================================
            METRIC CARDS
-        ========================================================= */
+        ========================================================== */
 
         .app-metric .card-body {
             min-height: 175px;
@@ -153,10 +148,9 @@
             font-size: 2.5rem;
         }
 
-
         /* =========================================================
            TABLE
-        ========================================================= */
+        ========================================================== */
 
         .app-table thead {
             background: #eff6ff;
@@ -167,10 +161,9 @@
                 rgba(79, 70, 229, .05);
         }
 
-
         /* =========================================================
            BUTTON
-        ========================================================= */
+        ========================================================== */
 
         .btn-soft-primary {
             color: #312e81;
@@ -187,10 +180,9 @@
                 rgba(79, 70, 229, .18);
         }
 
-
         /* =========================================================
            FORM
-        ========================================================= */
+        ========================================================== */
 
         .form-control,
         .form-select {
@@ -200,10 +192,9 @@
                 rgba(15,23,42,.12);
         }
 
-
         /* =========================================================
            ALERT
-        ========================================================= */
+        ========================================================== */
 
         .alert-custom {
             border-radius: 1rem;
@@ -215,10 +206,9 @@
                 rgba(224, 242, 254, .82);
         }
 
-
         /* =========================================================
            AUTH
-        ========================================================= */
+        ========================================================== */
 
         .auth-card {
             max-width: 460px;
@@ -241,10 +231,9 @@
             color: white;
         }
 
-
         /* =========================================================
            TEXT
-        ========================================================= */
+        ========================================================== */
 
         .text-muted {
             color:
@@ -255,19 +244,17 @@
             font-size: .9rem;
         }
 
-
         /* =========================================================
            BREADCRUMB
-        ========================================================= */
+        ========================================================== */
 
         .breadcrumb-item + .breadcrumb-item::before {
             content: "›";
         }
 
-
         /* =========================================================
            CHATBOT
-        ========================================================= */
+        ========================================================== */
 
         .attendance-chatbot {
             position: fixed;
@@ -390,111 +377,72 @@
 
         .attendance-chatbot__title {
             font-weight: 700;
-
             font-size: .98rem;
         }
 
         .attendance-chatbot__close {
             border: 0;
-
             background: transparent;
-
             color: #fff;
-
             font-size: 1.7rem;
-
             line-height: 1;
-
             cursor: pointer;
         }
 
         .attendance-chatbot__messages {
             display: flex;
-
             flex: 1;
-
             flex-direction: column;
-
             gap: 10px;
-
             overflow-y: auto;
-
             padding: 17px;
-
             background: #f8faff;
         }
 
         .attendance-chatbot__message {
             width: fit-content;
-
             max-width: 82%;
-
-            padding:
-                10px 13px;
-
+            padding: 10px 13px;
             border-radius: 14px;
-
             font-size: .9rem;
-
             line-height: 1.4;
-
             white-space: pre-wrap;
         }
 
         .attendance-chatbot__message--bot {
             align-self: flex-start;
-
             border-bottom-left-radius: 4px;
-
             background: #e9edff;
-
             color: #20225e;
         }
 
         .attendance-chatbot__message--user {
             align-self: flex-end;
-
             border-bottom-right-radius: 4px;
-
             background: #4f46e5;
-
             color: #fff;
         }
 
         .attendance-chatbot__form {
             display: flex;
-
             gap: 8px;
-
             padding: 12px;
-
-            border-top:
-                1px solid #e5e7eb;
-
+            border-top: 1px solid #e5e7eb;
             background: #fff;
         }
 
         .attendance-chatbot__form input {
             min-width: 0;
-
             flex: 1;
-
-            padding:
-                10px 12px;
-
-            border:
-                1px solid #d7dbe8;
-
+            padding: 10px 12px;
+            border: 1px solid #d7dbe8;
             border-radius: 10px;
-
             outline: none;
-
             font-size: .86rem;
         }
 
         .attendance-chatbot__form input:focus {
-            border-color:
-                #6366f1;
+            border-color: #6366f1;
 
             box-shadow:
                 0 0 0 3px
@@ -502,33 +450,23 @@
         }
 
         .attendance-chatbot__form button {
-            padding:
-                0 14px;
-
+            padding: 0 14px;
             border: 0;
-
             border-radius: 10px;
-
-            background:
-                #4f46e5;
-
+            background: #4f46e5;
             color: #fff;
-
             font-weight: 600;
-
             cursor: pointer;
         }
 
         .attendance-chatbot__form button:disabled {
             opacity: .6;
-
             cursor: wait;
         }
 
-
         /* =========================================================
            MOBILE
-        ========================================================= */
+        ========================================================== */
 
         @media (max-width: 767px) {
 
@@ -558,7 +496,6 @@
 
     </style>
 
-    {{-- Page-specific styles --}}
     @stack('styles')
 
 </head>
@@ -566,216 +503,369 @@
 
 <body>
 
-    {{-- =========================================================
-         AUTHENTICATED NAVBAR
-    ========================================================== --}}
+{{-- =========================================================
+     AUTHENTICATED NAVBAR
+========================================================== --}}
 
-    @auth
+@auth
 
-        <nav class="navbar navbar-expand-lg navbar-dark app-navbar py-3 shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-dark app-navbar py-3 shadow-sm">
 
-            <div class="container">
+    <div class="container">
 
-                <a
-                    class="navbar-brand"
-                    href="{{ route('dashboard') }}"
-                >
-                    Smart Attendance
-                </a>
+        {{-- =====================================================
+             BRAND
+        ====================================================== --}}
 
+        @if(auth()->user()->role === 'admin')
 
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#mainNav"
-                >
+            <a
+                class="navbar-brand"
+                href="{{ route('dashboard') }}"
+            >
+                Smart Attendance
+            </a>
 
-                    <span class="navbar-toggler-icon"></span>
+        @elseif(auth()->user()->role === 'faculty')
 
-                </button>
+            <a
+                class="navbar-brand"
+                href="{{ route('faculty.dashboard') }}"
+            >
+                Smart Attendance
+            </a>
 
+        @else
 
-                <div
-                    class="collapse navbar-collapse"
-                    id="mainNav"
-                >
-
-                    <ul class="navbar-nav ms-auto align-items-center">
-
-                        {{-- Dashboard --}}
-
-                        <li class="nav-item">
-
-                            <a
-                                class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
-                                href="{{ route('dashboard') }}"
-                            >
-                                Dashboard
-                            </a>
-
-                        </li>
-
-
-                        {{-- Students --}}
-
-                        <li class="nav-item">
-
-                            <a
-                                class="nav-link {{ request()->routeIs('students.*') ? 'active' : '' }}"
-                                href="{{ route('students.index') }}"
-                            >
-                                Students
-                            </a>
-
-                        </li>
-
-
-                        {{-- Departments --}}
-
-                        <li class="nav-item">
-
-                            <a
-                                class="nav-link {{ request()->routeIs('departments.*') ? 'active' : '' }}"
-                                href="{{ route('departments.index') }}"
-                            >
-                                Departments
-                            </a>
-
-                        </li>
-
-
-                        {{-- Faculties --}}
-
-                        <li class="nav-item">
-
-                            <a
-                                class="nav-link {{ request()->routeIs('faculties.*') ? 'active' : '' }}"
-                                href="{{ route('faculties.index') }}"
-                            >
-                                Faculties
-                            </a>
-
-                        </li>
-
-
-                        {{-- QR Generator --}}
-
-                        <li class="nav-item">
-
-                            <a
-                                class="nav-link {{ request()->routeIs('qr.*') ? 'active' : '' }}"
-                                href="{{ route('qr.index') }}"
-                            >
-                                QR Generator
-                            </a>
-
-                        </li>
-
-
-                        {{-- Logout --}}
-
-                        <li class="nav-item ms-lg-3">
-
-                            <form
-                                method="POST"
-                                action="{{ route('logout') }}"
-                            >
-
-                                @csrf
-
-                                <button
-                                    type="submit"
-                                    class="btn btn-outline-light btn-sm"
-                                >
-                                    Logout
-                                </button>
-
-                            </form>
-
-                        </li>
-
-                    </ul>
-
-                </div>
-
-            </div>
-
-        </nav>
-
-    @endauth
-
-
-    {{-- =========================================================
-         MAIN CONTENT
-    ========================================================== --}}
-
-    <main class="container py-5">
-
-        {{-- Success Message --}}
-
-        @if(session('success'))
-
-            <div class="alert alert-success alert-custom shadow-sm">
-
-                {{ session('success') }}
-
-            </div>
+            <a
+                class="navbar-brand"
+                href="{{ route('login') }}"
+            >
+                Smart Attendance
+            </a>
 
         @endif
 
 
-        {{-- Error Messages --}}
+        {{-- Mobile menu button --}}
 
-        @if($errors && $errors->any())
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNav"
+        >
 
-            <div class="alert alert-danger alert-custom shadow-sm">
+            <span class="navbar-toggler-icon"></span>
 
-                <ul class="mb-0">
-
-                    @foreach($errors->all() as $error)
-
-                        <li>
-                            {{ $error }}
-                        </li>
-
-                    @endforeach
-
-                </ul>
-
-            </div>
-
-        @endif
+        </button>
 
 
-        {{-- Page Content --}}
+        <div
+            class="collapse navbar-collapse"
+            id="mainNav"
+        >
 
-        @yield('content')
-
-    </main>
+            <ul class="navbar-nav ms-auto align-items-center">
 
 
-    {{-- =========================================================
-         CHATBOT
-    ========================================================== --}}
+                {{-- =================================================
+                     ADMIN NAVIGATION
+                ================================================== --}}
 
-    @auth
+                @if(auth()->user()->role === 'admin')
+
+                    {{-- Dashboard --}}
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link
+                            {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+                            href="{{ route('dashboard') }}"
+                        >
+                            Dashboard
+                        </a>
+
+                    </li>
+
+
+                    {{-- Students --}}
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link
+                            {{ request()->routeIs('admin.students.*') ? 'active' : '' }}"
+                            href="{{ route('admin.students.index') }}"
+                        >
+                            Students
+                        </a>
+
+                    </li>
+
+
+                    {{-- Departments --}}
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link
+                            {{ request()->routeIs('departments.*') ? 'active' : '' }}"
+                            href="{{ route('departments.index') }}"
+                        >
+                            Departments
+                        </a>
+
+                    </li>
+
+
+                    {{-- Faculties --}}
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link
+                            {{ request()->routeIs('faculties.*') ? 'active' : '' }}"
+                            href="{{ route('faculties.index') }}"
+                        >
+                            Faculties
+                        </a>
+
+                    </li>
+
+
+                    {{-- QR Generator --}}
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link
+                            {{ request()->routeIs('admin.qr.*') ? 'active' : '' }}"
+                            href="{{ route('admin.qr.index') }}"
+                        >
+                            QR Generator
+                        </a>
+
+                    </li>
+
+
+                    {{-- Chatbot --}}
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link
+                            {{ request()->routeIs('admin.chatbot.*') ? 'active' : '' }}"
+                            href="{{ route('admin.chatbot.index') }}"
+                        >
+                            Chatbot
+                        </a>
+
+                    </li>
+
+                @endif
+
+
+
+                {{-- =================================================
+                     FACULTY NAVIGATION
+                ================================================== --}}
+
+                @if(auth()->user()->role === 'faculty')
+
+                    {{-- Faculty Dashboard --}}
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link
+                            {{ request()->routeIs('faculty.dashboard') ? 'active' : '' }}"
+                            href="{{ route('faculty.dashboard') }}"
+                        >
+                            Dashboard
+                        </a>
+
+                    </li>
+
+
+                    {{-- Students --}}
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link
+                            {{ request()->routeIs('faculty.students.*') ? 'active' : '' }}"
+                            href="{{ route('faculty.students.index') }}"
+                        >
+                            Students
+                        </a>
+
+                    </li>
+
+
+                    {{-- QR Generator --}}
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link
+                            {{ request()->routeIs('faculty.qr.*') ? 'active' : '' }}"
+                            href="{{ route('faculty.qr.index') }}"
+                        >
+                            QR Generator
+                        </a>
+
+                    </li>
+
+
+                    {{-- Chatbot --}}
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link
+                            {{ request()->routeIs('faculty.chatbot.*') ? 'active' : '' }}"
+                            href="{{ route('faculty.chatbot.index') }}"
+                        >
+                            Chatbot
+                        </a>
+
+                    </li>
+
+                @endif
+
+
+
+                {{-- =================================================
+                     LOGGED-IN USER
+                ================================================== --}}
+
+                <li class="nav-item ms-lg-3">
+
+                    <span class="text-white me-3">
+
+                        {{ auth()->user()->name }}
+
+                        <small class="opacity-75">
+                            ({{ ucfirst(auth()->user()->role) }})
+                        </small>
+
+                    </span>
+
+                </li>
+
+
+                {{-- =================================================
+                     LOGOUT
+                ================================================== --}}
+
+                <li class="nav-item">
+
+                    <form
+                        method="POST"
+                        action="{{ route('logout') }}"
+                    >
+
+                        @csrf
+
+                        <button
+                            type="submit"
+                            class="btn btn-outline-light btn-sm"
+                        >
+                            Logout
+                        </button>
+
+                    </form>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+@endauth
+
+
+
+{{-- =========================================================
+     MAIN CONTENT
+========================================================== --}}
+
+<main class="container py-5">
+
+    {{-- Success Message --}}
+
+    @if(session('success'))
+
+        <div class="alert alert-success alert-custom shadow-sm">
+
+            {{ session('success') }}
+
+        </div>
+
+    @endif
+
+
+    {{-- Error Messages --}}
+
+    @if($errors->any())
+
+        <div class="alert alert-danger alert-custom shadow-sm">
+
+            <ul class="mb-0">
+
+                @foreach($errors->all() as $error)
+
+                    <li>
+                        {{ $error }}
+                    </li>
+
+                @endforeach
+
+            </ul>
+
+        </div>
+
+    @endif
+
+
+    {{-- Page Content --}}
+
+    @yield('content')
+
+</main>
+
+
+
+{{-- =========================================================
+     CHATBOT
+========================================================== --}}
+
+@auth
+
+    @if(in_array(auth()->user()->role, ['admin', 'faculty']))
 
         @include('partials.chatbot-widget')
 
-    @endauth
+    @endif
+
+@endauth
 
 
-    {{-- Bootstrap JS --}}
 
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-    </script>
+{{-- Bootstrap JS --}}
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
 
 
-    {{-- Page-specific scripts --}}
-
-    @stack('scripts')
+@stack('scripts')
 
 </body>
 

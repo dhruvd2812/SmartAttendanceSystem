@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Home
+| HOME
 |--------------------------------------------------------------------------
 */
 
@@ -26,7 +26,7 @@ Route::get('/', function () {
 
 /*
 |--------------------------------------------------------------------------
-| Authentication
+| AUTHENTICATION
 |--------------------------------------------------------------------------
 */
 
@@ -48,11 +48,14 @@ Route::post('/logout', [AuthController::class, 'logout'])
 
 /*
 |--------------------------------------------------------------------------
-| Authenticated Routes
+| ADMIN ROUTES
 |--------------------------------------------------------------------------
+|
+| Admin = Full system authority
+|
 */
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'role:admin'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
@@ -66,28 +69,74 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Student Dashboard
+    | Admin Students
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])
-        ->name('student.dashboard');
+    Route::resource('/admin/students', StudentController::class)
+        ->names('admin.students');
 
-    Route::get('/student/profile', [StudentDashboardController::class, 'profile'])
-        ->name('student.profile');
-
-    Route::get('/student/attendance', [StudentAttendanceController::class, 'index'])
-        ->name('student.attendance');
 
     /*
     |--------------------------------------------------------------------------
-    | Student QR Scanner
+    | Departments
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/student/scan-qr', [QrController::class, 'scan'])
-        ->name('student.scan-qr');
+    Route::resource('/departments', DepartmentController::class);
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Faculties
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource('/faculties', FacultyController::class);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin QR Generator
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/admin/qr-generator', [QrController::class, 'index'])
+        ->name('admin.qr.index');
+
+    Route::post('/admin/qr-generator', [QrController::class, 'generate'])
+        ->name('admin.qr.generate');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Chatbot
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/admin/chatbot', [ChatbotController::class, 'index'])
+        ->name('admin.chatbot.index');
+
+    Route::post('/admin/chatbot/message', [ChatbotController::class, 'message'])
+        ->name('admin.chatbot.message');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| FACULTY ROUTES
+|--------------------------------------------------------------------------
+|
+| Faculty can:
+| - Faculty Dashboard
+| - Students
+| - Attendance
+| - QR Generator
+| - Student information
+|
+*/
+
+Route::middleware(['auth', 'role:faculty'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
@@ -101,54 +150,88 @@ Route::middleware('auth')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Departments
+    | Faculty Students
     |--------------------------------------------------------------------------
     */
 
-    Route::resource('departments', DepartmentController::class);
+    Route::resource('/students', StudentController::class)
+        ->names('faculty.students');
 
 
     /*
     |--------------------------------------------------------------------------
-    | Students
-    |--------------------------------------------------------------------------
-    */
-
-    Route::resource('students', StudentController::class);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Faculties
-    |--------------------------------------------------------------------------
-    */
-
-    Route::resource('faculties', FacultyController::class);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | QR Generator
+    | Faculty QR Generator
     |--------------------------------------------------------------------------
     */
 
     Route::get('/qr-generator', [QrController::class, 'index'])
-        ->name('qr.index');
+        ->name('faculty.qr.index');
 
     Route::post('/qr-generator', [QrController::class, 'generate'])
-        ->name('qr.generate');
+        ->name('faculty.qr.generate');
 
 
     /*
     |--------------------------------------------------------------------------
-    | AI Chatbot
+    | Faculty Chatbot
     |--------------------------------------------------------------------------
     */
 
     Route::get('/chatbot', [ChatbotController::class, 'index'])
-        ->name('chatbot.index');
+        ->name('faculty.chatbot.index');
 
     Route::post('/chatbot/message', [ChatbotController::class, 'message'])
-        ->name('chatbot.message');
+        ->name('faculty.chatbot.message');
+});
 
+
+/*
+|--------------------------------------------------------------------------
+| STUDENT ROUTES
+|--------------------------------------------------------------------------
+|
+| Student can ONLY access their own student area.
+|
+*/
+
+Route::middleware(['auth', 'role:student'])->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Student Dashboard
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])
+        ->name('student.dashboard');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Student Profile
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/student/profile', [StudentDashboardController::class, 'profile'])
+        ->name('student.profile');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Student Attendance
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/student/attendance', [StudentAttendanceController::class, 'index'])
+        ->name('student.attendance');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Student QR Scanner
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/student/scan-qr', [QrController::class, 'scan'])
+        ->name('student.scan-qr');
 });
