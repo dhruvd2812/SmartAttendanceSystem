@@ -50,6 +50,12 @@ class AuthController extends Controller
         ]);
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | Attempt Login
+        |--------------------------------------------------------------------------
+        */
+
         if (!Auth::attempt(
             $credentials,
             $request->boolean('remember')
@@ -63,7 +69,20 @@ class AuthController extends Controller
         }
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | Regenerate Session
+        |--------------------------------------------------------------------------
+        */
+
         $request->session()->regenerate();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Get Logged-in User
+        |--------------------------------------------------------------------------
+        */
 
         $user = Auth::user();
 
@@ -140,9 +159,33 @@ class AuthController extends Controller
 
     /**
      * Register Student.
+     *
+     * Student Registration Flow:
+     *
+     * Student Form
+     *      ↓
+     * Validate
+     *      ↓
+     * Create Student
+     *      ↓
+     * Create User
+     *      ↓
+     * student_id = student.id
+     *      ↓
+     * role = student
+     *      ↓
+     * Login
+     *      ↓
+     * Student Dashboard
      */
     public function register(Request $request)
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Validate Student Registration
+        |--------------------------------------------------------------------------
+        */
+
         $validated = $request->validate([
 
             'enrollment_no' => [
@@ -174,6 +217,7 @@ class AuthController extends Controller
                 'email',
                 'max:255',
                 'unique:users,email',
+                'unique:students,email',
             ],
 
             'department_id' => [
@@ -196,6 +240,12 @@ class AuthController extends Controller
             ],
         ]);
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Create Student + User
+        |--------------------------------------------------------------------------
+        */
 
         $user = DB::transaction(function () use ($validated) {
 
@@ -278,6 +328,12 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | Student Dashboard
+        |--------------------------------------------------------------------------
+        */
+
         return redirect()
             ->route('student.dashboard')
             ->with(
@@ -302,6 +358,10 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         | Get Departments
         |--------------------------------------------------------------------------
+        |
+        | IMPORTANT:
+        | Your departments table contains department_name.
+        |
         */
 
         $departments = Department::orderBy('department_name')
@@ -326,6 +386,12 @@ class AuthController extends Controller
      */
     public function facultyRegister(Request $request)
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Validate Faculty Registration
+        |--------------------------------------------------------------------------
+        */
+
         $validated = $request->validate([
 
             'faculty_name' => [
@@ -368,6 +434,12 @@ class AuthController extends Controller
             ],
         ]);
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Create Faculty + User
+        |--------------------------------------------------------------------------
+        */
 
         $user = DB::transaction(function () use ($validated) {
 
@@ -428,90 +500,17 @@ class AuthController extends Controller
         });
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | Faculty Registration Complete
+        |--------------------------------------------------------------------------
+        */
+
         return redirect()
             ->route('login')
             ->with(
                 'success',
                 'Faculty registration successful. Please login.'
-            );
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | ADMIN REGISTRATION
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Show Admin Registration page.
-     *
-     * IMPORTANT:
-     * In a real production system, public admin registration
-     * should normally be disabled.
-     */
-    public function showAdminRegister()
-    {
-        return view('auth.admin-register');
-    }
-
-
-    /**
-     * Register Admin.
-     */
-    public function adminRegister(Request $request)
-    {
-        $validated = $request->validate([
-
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-            ],
-
-            'email' => [
-                'required',
-                'email',
-                'max:255',
-                'unique:users,email',
-            ],
-
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'confirmed',
-            ],
-        ]);
-
-
-        User::create([
-
-            'name' =>
-                $validated['name'],
-
-            'email' =>
-                $validated['email'],
-
-            'password' =>
-                Hash::make($validated['password']),
-
-            'role' =>
-                'admin',
-
-            'student_id' =>
-                null,
-
-            'faculty_id' =>
-                null,
-        ]);
-
-
-        return redirect()
-            ->route('login')
-            ->with(
-                'success',
-                'Admin account created successfully. Please login.'
             );
     }
 
@@ -527,11 +526,38 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Logout
+        |--------------------------------------------------------------------------
+        */
+
         Auth::logout();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Invalidate Session
+        |--------------------------------------------------------------------------
+        */
 
         $request->session()->invalidate();
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Regenerate CSRF Token
+        |--------------------------------------------------------------------------
+        */
+
         $request->session()->regenerateToken();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Redirect Login
+        |--------------------------------------------------------------------------
+        */
 
         return redirect()
             ->route('login')
