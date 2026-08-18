@@ -1,499 +1,53 @@
 @extends('layouts.app')
 
-@section('title', 'Faculty Dashboard')
+@section('title', 'Faculty Dashboard | Smart Attendance')
 
 @section('content')
-
 <div class="container-fluid py-4">
-
-    {{-- =========================================================
-         PAGE HEADER
-    ========================================================== --}}
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <div>
-
-            <h2 class="fw-bold mb-1">
-                Faculty Dashboard
-            </h2>
-
-            <p class="text-muted mb-0">
-                Welcome back,
-                <strong>{{ $user->name ?? 'Faculty' }}</strong> 👋
-            </p>
-
+    <div class="app-hero p-4 p-md-5 mb-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+            <div>
+                <p class="mb-2 opacity-75">Faculty Dashboard</p>
+                <h1 class="display-6 mb-2">Hello, {{ $user->name ?? 'Faculty' }}</h1>
+                <p class="mb-0">Manage your subjects, students, attendance sessions, and QR codes.</p>
+            </div>
+            <div class="mt-3 mt-md-0"><span class="badge bg-dark fs-6 px-3 py-2">Faculty</span></div>
         </div>
-
-        <div>
-
-            <span class="badge bg-primary px-3 py-2">
-                Faculty
-            </span>
-
-        </div>
-
     </div>
-
-
-    {{-- =========================================================
-         STATISTICS
-    ========================================================== --}}
 
     <div class="row g-4 mb-4">
-
-        {{-- My Subjects --}}
-        <div class="col-md-6 col-xl-3">
-
-            <div class="card border-0 shadow-sm h-100">
-
-                <div class="card-body">
-
-                    <div class="d-flex justify-content-between align-items-center">
-
-                        <div>
-
-                            <p class="text-muted mb-1">
-                                My Subjects
-                            </p>
-
-                            <h3 class="fw-bold mb-0">
-                                0
-                            </h3>
-
-                        </div>
-
-                        <div class="fs-1 text-primary">
-                            📚
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        {{-- Total Students --}}
-        <div class="col-md-6 col-xl-3">
-
-            <div class="card border-0 shadow-sm h-100">
-
-                <div class="card-body">
-
-                    <div class="d-flex justify-content-between align-items-center">
-
-                        <div>
-
-                            <p class="text-muted mb-1">
-                                Total Students
-                            </p>
-
-                            <h3 class="fw-bold mb-0">
-                                0
-                            </h3>
-
-                        </div>
-
-                        <div class="fs-1 text-success">
-                            👨‍🎓
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        {{-- Today's Classes --}}
-        <div class="col-md-6 col-xl-3">
-
-            <div class="card border-0 shadow-sm h-100">
-
-                <div class="card-body">
-
-                    <div class="d-flex justify-content-between align-items-center">
-
-                        <div>
-
-                            <p class="text-muted mb-1">
-                                Today's Classes
-                            </p>
-
-                            <h3 class="fw-bold mb-0">
-                                0
-                            </h3>
-
-                        </div>
-
-                        <div class="fs-1 text-warning">
-                            📅
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        {{-- Attendance Sessions --}}
-        <div class="col-md-6 col-xl-3">
-
-            <div class="card border-0 shadow-sm h-100">
-
-                <div class="card-body">
-
-                    <div class="d-flex justify-content-between align-items-center">
-
-                        <div>
-
-                            <p class="text-muted mb-1">
-                                Attendance Sessions
-                            </p>
-
-                            <h3 class="fw-bold mb-0">
-                                0
-                            </h3>
-
-                        </div>
-
-                        <div class="fs-1 text-danger">
-                            📝
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
+        <div class="col-md-6 col-xl-3"><div class="card shadow-sm border-0 h-100"><div class="card-body"><div class="d-flex justify-content-between"><div><p class="text-muted mb-1">My Subjects</p><h2 class="mb-0">{{ $subjectCount }}</h2></div><div class="fs-1">📚</div></div></div></div></div>
+        <div class="col-md-6 col-xl-3"><div class="card shadow-sm border-0 h-100"><div class="card-body"><div class="d-flex justify-content-between"><div><p class="text-muted mb-1">My Students</p><h2 class="mb-0">{{ $studentCount }}</h2></div><div class="fs-1">👨‍🎓</div></div></div></div></div>
+        <div class="col-md-6 col-xl-3"><div class="card shadow-sm border-0 h-100"><div class="card-body"><div class="d-flex justify-content-between"><div><p class="text-muted mb-1">Today's Classes</p><h2 class="mb-0">{{ $todayClasses }}</h2></div><div class="fs-1">🗓️</div></div></div></div></div>
+        <div class="col-md-6 col-xl-3"><div class="card shadow-sm border-0 h-100"><div class="card-body"><div class="d-flex justify-content-between"><div><p class="text-muted mb-1">Attendance Sessions</p><h2 class="mb-0">{{ $attendanceSessionCount }}</h2></div><div class="fs-1">📊</div></div></div></div></div>
     </div>
 
-
-    {{-- =========================================================
-         MAIN DASHBOARD
-    ========================================================== --}}
-
-    <div class="row g-4">
-
-
-        {{-- =====================================================
-             ASSIGNED SUBJECTS
-        ====================================================== --}}
-
-        <div class="col-lg-7">
-
-            <div class="card border-0 shadow-sm h-100">
-
-                <div class="card-header bg-white border-0 py-3">
-
-                    <h5 class="fw-bold mb-0">
-                        📚 My Assigned Subjects
-                    </h5>
-
-                </div>
-
-                <div class="card-body">
-
-                    <div class="text-center py-5">
-
-                        <div class="fs-1 mb-3">
-                            📖
-                        </div>
-
-                        <h5 class="fw-semibold">
-                            No Subjects Assigned
-                        </h5>
-
-                        <p class="text-muted mb-0">
-                            Your assigned subjects will appear here.
-                        </p>
-
-                    </div>
-
-                </div>
-
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h4 class="mb-4">Quick Actions</h4>
+            <div class="row g-3">
+                <div class="col-md-6 col-lg-4"><a href="{{ route('faculty.qr.index') }}" class="btn btn-primary w-100 py-3">📱<br>Generate QR Code</a></div>
+                <div class="col-md-6 col-lg-4"><a href="{{ route('faculty.students.index') }}" class="btn btn-success w-100 py-3">👨‍🎓<br>View Students</a></div>
+                <div class="col-md-6 col-lg-4"><a href="{{ route('faculty.chatbot.index') }}" class="btn btn-dark w-100 py-3">🤖<br>Open Chatbot</a></div>
             </div>
-
         </div>
-
-
-        {{-- =====================================================
-             QUICK ACTIONS
-        ====================================================== --}}
-
-        <div class="col-lg-5">
-
-            <div class="card border-0 shadow-sm h-100">
-
-                <div class="card-header bg-white border-0 py-3">
-
-                    <h5 class="fw-bold mb-0">
-                        ⚡ Quick Actions
-                    </h5>
-
-                </div>
-
-                <div class="card-body">
-
-
-                    {{-- =========================================
-                         START ATTENDANCE
-                    ========================================== --}}
-
-                    <div class="text-center mb-4">
-
-                        <div class="fs-1 mb-2">
-                            📝
-                        </div>
-
-                        <h5 class="fw-bold mb-2">
-                            Start Attendance?
-                        </h5>
-
-                        <p class="text-muted small mb-3">
-                            Do you want to start a new attendance
-                            session for your class?
-                        </p>
-
-
-                        <div class="d-flex justify-content-center gap-2">
-
-
-                            {{-- YES --}}
-                            <a
-                                href="{{ route('qr.index') }}"
-                                class="btn btn-success px-4"
-                            >
-
-                                <i class="bi bi-check-circle me-1"></i>
-
-                                YES
-
-                            </a>
-
-
-                            {{-- NO --}}
-                            <a
-                                href="{{ route('faculty.dashboard') }}"
-                                class="btn btn-outline-secondary px-4"
-                            >
-
-                                <i class="bi bi-x-circle me-1"></i>
-
-                                NO
-
-                            </a>
-
-                        </div>
-
-                    </div>
-
-
-                    <hr>
-
-
-                    {{-- =========================================
-                         OTHER ACTIONS
-                    ========================================== --}}
-
-                    <div class="d-grid gap-3 mt-3">
-
-
-                        {{-- Faculty Management --}}
-                        <a
-                            href="{{ route('faculties.index') }}"
-                            class="btn btn-outline-primary"
-                        >
-
-                            👨‍🏫 Faculty Management
-
-                        </a>
-
-
-                        {{-- Students --}}
-                        <a
-                            href="{{ route('students.index') }}"
-                            class="btn btn-outline-success"
-                        >
-
-                            👨‍🎓 View Students
-
-                        </a>
-
-
-                        {{-- Departments --}}
-                        <a
-                            href="{{ route('departments.index') }}"
-                            class="btn btn-outline-secondary"
-                        >
-
-                            🏢 Departments
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
     </div>
 
-
-    {{-- =========================================================
-         ATTENDANCE MANAGEMENT
-    ========================================================== --}}
-
-    <div class="row g-4 mt-1">
-
-        <div class="col-12">
-
-            <div class="card border-0 shadow-sm">
-
-                <div class="card-header bg-white border-0 py-3">
-
-                    <h5 class="fw-bold mb-0">
-                        📝 Attendance Management
-                    </h5>
-
-                </div>
-
-                <div class="card-body">
-
-                    <div class="row text-center">
-
-
-                        {{-- =====================================
-                             QR ATTENDANCE
-                        ====================================== --}}
-
-                        <div class="col-md-4 mb-3 mb-md-0">
-
-                            <div class="p-3 border rounded h-100">
-
-                                <div class="fs-2 mb-2">
-                                    🔲
-                                </div>
-
-                                <h6 class="fw-bold">
-                                    QR Attendance
-                                </h6>
-
-                                <p class="text-muted small">
-                                    Start an attendance session
-                                    and generate a QR code.
-                                </p>
-
-
-                                {{-- Start Attendance --}}
-                                <a
-                                    href="{{ route('qr.index') }}"
-                                    class="btn btn-sm btn-primary"
-                                >
-
-                                    <i class="bi bi-play-circle me-1"></i>
-
-                                    Start Attendance
-
-                                </a>
-
-                            </div>
-
-                        </div>
-
-
-                        {{-- =====================================
-                             STUDENT ATTENDANCE
-                        ====================================== --}}
-
-                        <div class="col-md-4 mb-3 mb-md-0">
-
-                            <div class="p-3 border rounded h-100">
-
-                                <div class="fs-2 mb-2">
-                                    👥
-                                </div>
-
-                                <h6 class="fw-bold">
-                                    Student Attendance
-                                </h6>
-
-                                <p class="text-muted small">
-                                    View attendance records
-                                    of students.
-                                </p>
-
-                                <button
-                                    class="btn btn-sm btn-success"
-                                    disabled
-                                >
-
-                                    Coming Soon
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-
-                        {{-- =====================================
-                             ATTENDANCE REPORTS
-                        ====================================== --}}
-
-                        <div class="col-md-4">
-
-                            <div class="p-3 border rounded h-100">
-
-                                <div class="fs-2 mb-2">
-                                    📊
-                                </div>
-
-                                <h6 class="fw-bold">
-                                    Attendance Reports
-                                </h6>
-
-                                <p class="text-muted small">
-                                    Analyze and generate
-                                    attendance reports.
-                                </p>
-
-                                <button
-                                    class="btn btn-sm btn-warning"
-                                    disabled
-                                >
-
-                                    Coming Soon
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center"><h5 class="mb-0">My Assigned Subjects</h5><span class="text-muted small">{{ $subjectCount }} assigned</span></div>
+        <div class="card-body p-0">
+            @if($subjects->isNotEmpty())
+                <div class="table-responsive"><table class="table table-hover mb-0"><thead><tr><th>Subject</th><th>Code</th><th>Semester</th><th>Enrolled Students</th></tr></thead><tbody>
+                    @foreach($subjects as $subject)
+                        <tr><td>{{ $subject->name }}</td><td>{{ $subject->code ?? '-' }}</td><td>{{ $subject->semester ?? '-' }}</td><td>{{ $subject->student_classes_count }}</td></tr>
+                    @endforeach
+                </tbody></table></div>
+            @else
+                <div class="p-4 text-center text-muted">No subjects have been assigned yet.</div>
+            @endif
         </div>
-
     </div>
 
+    <div class="card shadow-sm border-0"><div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3"><div><h5 class="mb-1">🤖 Smart Attendance AI</h5><p class="text-muted mb-0">Ask about your subjects, students, attendance, or QR codes.</p></div><a href="{{ route('faculty.chatbot.index') }}" class="btn btn-primary">Open Chatbot</a></div></div>
 </div>
-
 @endsection

@@ -2,30 +2,45 @@
 
 namespace App\Models;
 
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'role',
-    'student_id',
-    'faculty_id',
-];
+    /*
+    |--------------------------------------------------------------------------
+    | Mass Assignment
+    |--------------------------------------------------------------------------
+    */
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role',
+        'student_id',
+        'faculty_id',
+    ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Hidden Attributes
+    |--------------------------------------------------------------------------
+    */
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Attribute Casting
+    |--------------------------------------------------------------------------
+    */
 
     protected function casts(): array
     {
@@ -35,27 +50,25 @@ protected $fillable = [
         ];
     }
 
-    /**
-     * User belongs to a Student.
-     */
-    public function student(): BelongsTo
+    /*
+    |--------------------------------------------------------------------------
+    | Student Relationship
+    |--------------------------------------------------------------------------
+    */
+
+    public function student()
     {
-        return $this->belongsTo(
-            Student::class,
-            'student_id',
-            'id'
-        );
+        return $this->belongsTo(Student::class, 'student_id');
     }
 
-    /**
-     * User belongs to a Faculty.
-     */
-    public function faculty(): BelongsTo
+    /*
+    |--------------------------------------------------------------------------
+    | Faculty Relationship
+    |--------------------------------------------------------------------------
+    */
+
+    public function faculty()
     {
-        return $this->belongsTo(
-            Faculty::class,
-            'faculty_id',
-            'id'
-        );
+        return $this->belongsTo(Faculty::class, 'faculty_id');
     }
 }
