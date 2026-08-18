@@ -365,7 +365,7 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $departments = Department::orderBy('name')->get();
+        $departments = Department::orderBy('department_name')->get();
 
 
         /*

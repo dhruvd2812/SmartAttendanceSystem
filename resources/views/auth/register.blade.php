@@ -183,13 +183,13 @@
                                         Select Department
                                     </option>
 
-                                    @foreach(\App\Models\Department::orderBy('name')->get() as $department)
+                                    @foreach(\App\Models\Department::orderBy('department_name')->get() as $department)
 
                                         <option
                                             value="{{ $department->id }}"
                                             {{ old('department_id') == $department->id ? 'selected' : '' }}
                                         >
-                                            {{ $department->name }}
+                                            {{ $department->department_name }}
                                         </option>
 
                                     @endforeach
