@@ -38,12 +38,6 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Validate Login
-        |--------------------------------------------------------------------------
-        */
-
         $credentials = $request->validate([
             'email' => [
                 'required',
@@ -55,12 +49,6 @@ class AuthController extends Controller
             ],
         ]);
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Attempt Login
-        |--------------------------------------------------------------------------
-        */
 
         if (!Auth::attempt(
             $credentials,
@@ -75,20 +63,7 @@ class AuthController extends Controller
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Regenerate Session
-        |--------------------------------------------------------------------------
-        */
-
         $request->session()->regenerate();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Get Logged-in User
-        |--------------------------------------------------------------------------
-        */
 
         $user = Auth::user();
 
@@ -164,34 +139,10 @@ class AuthController extends Controller
 
 
     /**
-     * Register a new Student.
-     *
-     * Registration Flow:
-     *
-     * Student Form
-     *      ↓
-     * Validate
-     *      ↓
-     * Create Student
-     *      ↓
-     * Create User
-     *      ↓
-     * student_id = student.id
-     *      ↓
-     * role = student
-     *      ↓
-     * Login
-     *      ↓
-     * Student Dashboard
+     * Register Student.
      */
     public function register(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Validate Student Registration
-        |--------------------------------------------------------------------------
-        */
-
         $validated = $request->validate([
 
             'enrollment_no' => [
@@ -246,12 +197,6 @@ class AuthController extends Controller
         ]);
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Create Student + User
-        |--------------------------------------------------------------------------
-        */
-
         $user = DB::transaction(function () use ($validated) {
 
             /*
@@ -290,7 +235,7 @@ class AuthController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | Create User
+            | Create Student User
             |--------------------------------------------------------------------------
             */
 
@@ -333,12 +278,6 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Student Dashboard
-        |--------------------------------------------------------------------------
-        */
-
         return redirect()
             ->route('student.dashboard')
             ->with(
@@ -365,12 +304,13 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $departments = Department::orderBy('name')->get();
+        $departments = Department::orderBy('department_name')
+            ->get();
 
 
         /*
         |--------------------------------------------------------------------------
-        | Show Faculty Registration View
+        | Faculty Registration View
         |--------------------------------------------------------------------------
         */
 
@@ -382,39 +322,11 @@ class AuthController extends Controller
 
 
     /**
-     * Register a new Faculty.
-     *
-     * Registration Flow:
-     *
-     * Faculty Form
-     *      ↓
-     * Validate
-     *      ↓
-     * Create Faculty
-     *      ↓
-     * Create User
-     *      ↓
-     * faculty_id = faculty.id
-     *      ↓
-     * role = faculty
-     *      ↓
-     * Login Page
+     * Register Faculty.
      */
     public function facultyRegister(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Validate Faculty Registration
-        |--------------------------------------------------------------------------
-        */
-
         $validated = $request->validate([
-
-            /*
-            |--------------------------------------------------------------------------
-            | Faculty Name
-            |--------------------------------------------------------------------------
-            */
 
             'faculty_name' => [
                 'required',
@@ -422,26 +334,12 @@ class AuthController extends Controller
                 'max:255',
             ],
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | Employee ID
-            |--------------------------------------------------------------------------
-            */
-
             'employee_id' => [
                 'required',
                 'string',
                 'max:50',
                 'unique:faculties,employee_id',
             ],
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | Email
-            |--------------------------------------------------------------------------
-            */
 
             'email' => [
                 'required',
@@ -451,37 +349,16 @@ class AuthController extends Controller
                 'unique:users,email',
             ],
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | Phone
-            |--------------------------------------------------------------------------
-            */
-
             'phone' => [
                 'required',
                 'string',
                 'max:20',
             ],
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | Department
-            |--------------------------------------------------------------------------
-            */
-
             'department_id' => [
                 'required',
                 'exists:departments,id',
             ],
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | Password
-            |--------------------------------------------------------------------------
-            */
 
             'password' => [
                 'required',
@@ -492,17 +369,11 @@ class AuthController extends Controller
         ]);
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Create Faculty + User
-        |--------------------------------------------------------------------------
-        */
-
         $user = DB::transaction(function () use ($validated) {
 
             /*
             |--------------------------------------------------------------------------
-            | 1. Create Faculty
+            | Create Faculty
             |--------------------------------------------------------------------------
             */
 
@@ -527,7 +398,7 @@ class AuthController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | 2. Create Faculty User
+            | Create Faculty User
             |--------------------------------------------------------------------------
             */
 
@@ -553,27 +424,94 @@ class AuthController extends Controller
             ]);
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | Return User
-            |--------------------------------------------------------------------------
-            */
-
             return $user;
         });
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Faculty Registration Complete
-        |--------------------------------------------------------------------------
-        */
 
         return redirect()
             ->route('login')
             ->with(
                 'success',
                 'Faculty registration successful. Please login.'
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN REGISTRATION
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Show Admin Registration page.
+     *
+     * IMPORTANT:
+     * In a real production system, public admin registration
+     * should normally be disabled.
+     */
+    public function showAdminRegister()
+    {
+        return view('auth.admin-register');
+    }
+
+
+    /**
+     * Register Admin.
+     */
+    public function adminRegister(Request $request)
+    {
+        $validated = $request->validate([
+
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                'unique:users,email',
+            ],
+
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
+        ]);
+
+
+        User::create([
+
+            'name' =>
+                $validated['name'],
+
+            'email' =>
+                $validated['email'],
+
+            'password' =>
+                Hash::make($validated['password']),
+
+            'role' =>
+                'admin',
+
+            'student_id' =>
+                null,
+
+            'faculty_id' =>
+                null,
+        ]);
+
+
+        return redirect()
+            ->route('login')
+            ->with(
+                'success',
+                'Admin account created successfully. Please login.'
             );
     }
 
@@ -589,38 +527,11 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Logout
-        |--------------------------------------------------------------------------
-        */
-
         Auth::logout();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Invalidate Session
-        |--------------------------------------------------------------------------
-        */
 
         $request->session()->invalidate();
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Regenerate CSRF Token
-        |--------------------------------------------------------------------------
-        */
-
         $request->session()->regenerateToken();
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Redirect Login
-        |--------------------------------------------------------------------------
-        */
 
         return redirect()
             ->route('login')
