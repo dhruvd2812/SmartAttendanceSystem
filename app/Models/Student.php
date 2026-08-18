@@ -16,12 +16,14 @@ class Student extends Model
     */
 
     protected $fillable = [
-        'name',
+        'enrollment_no',
+        'first_name',
+        'last_name',
         'email',
-        'phone',
         'gender',
-        'date_of_birth',
         'department_id',
+        'semester',
+        'status',
     ];
 
 
