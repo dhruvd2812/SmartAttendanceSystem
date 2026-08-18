@@ -184,10 +184,14 @@
 
                 <div class="card-body text-center">
 
-                    @if(isset($qrCode))
+                    @if(isset($qr))
 
                         <div class="mb-3">
-                            {!! $qrCode !!}
+                            <img src="{{ $qr }}"
+                                 alt="Attendance QR code"
+                                 class="img-fluid"
+                                 width="300"
+                                 height="300">
                         </div>
 
                         <p class="text-muted">

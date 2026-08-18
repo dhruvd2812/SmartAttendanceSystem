@@ -19,20 +19,19 @@ class QrController extends Controller
      */
     public function generate(Request $request)
     {
-        $request->validate([
-            'faculty' => 'required',
-            'department' => 'required',
-            'subject' => 'required',
+        $validated = $request->validate([
+            'subject' => ['required', 'string', 'max:255'],
+            'date' => ['required', 'date'],
+            'start_time' => ['required', 'date_format:H:i'],
+            'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
         ]);
 
         $data = json_encode([
             "session_id" => rand(1000, 9999),
-            "faculty" => $request->faculty,
-            "department" => $request->department,
-            "subject" => $request->subject,
-            "date" => now()->format('d-m-Y'),
-            "time" => now()->format('h:i A'),
-            "expires" => now()->addMinutes(2)->format('h:i A')
+            "subject" => $validated['subject'],
+            "date" => $validated['date'],
+            "start_time" => $validated['start_time'],
+            "end_time" => $validated['end_time'],
         ]);
 
         $qr = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="
