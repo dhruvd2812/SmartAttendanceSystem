@@ -12,7 +12,7 @@
                             <h1 class="h4 mb-1">Student Details</h1>
                             <p class="text-muted small mb-0">Review the selected student information.</p>
                         </div>
-                        <a href="{{ route('students.index') }}" class="btn btn-soft-primary">Back to students</a>
+                        <a href="{{ auth()->user()->role === 'admin' ? route('admin.students.index') : route('faculty.students.index') }}" class="btn btn-soft-primary">Back to students</a>
                     </div>
 
                     <div class="table-responsive">

@@ -12,7 +12,7 @@
                             <h1 class="h4 mb-1">Edit Student</h1>
                             <p class="text-muted small mb-0">Update the student record below.</p>
                         </div>
-                        <a href="{{ route('students.index') }}" class="btn btn-soft-primary">Back to list</a>
+                        <a href="{{ auth()->user()->role === 'admin' ? route('admin.students.index') : route('faculty.students.index') }}" class="btn btn-soft-primary">Back to list</a>
                     </div>
 
                     @if($errors->any())
@@ -25,7 +25,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('students.update',$student->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ auth()->user()->role === 'admin' ? route('admin.students.update',$student->id) : route('faculty.students.update',$student->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="row gy-3">
@@ -101,7 +101,7 @@
                         </div>
                         <div class="mt-4 d-flex flex-wrap gap-2">
                             <button type="submit" class="btn btn-primary">Update Student</button>
-                            <a href="{{ route('students.index') }}" class="btn btn-outline-secondary">Back</a>
+                            <a href="{{ auth()->user()->role === 'admin' ? route('admin.students.index') : route('faculty.students.index') }}" class="btn btn-outline-secondary">Back</a>
                         </div>
                     </form>
                 </div>

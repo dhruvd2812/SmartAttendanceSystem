@@ -21,7 +21,7 @@
                             </p>
                         </div>
 
-                        <a href="{{ route('students.index') }}"
+                        <a href="{{ auth()->user()->role === 'admin' ? route('admin.students.index') : route('faculty.students.index') }}"
                            class="btn btn-soft-primary">
                             Back to list
                         </a>
@@ -52,7 +52,7 @@
 
 
                     {{-- Student Form --}}
-                    <form action="{{ route('students.store') }}"
+                    <form action="{{ auth()->user()->role === 'admin' ? route('admin.students.store') : route('faculty.students.store') }}"
                           method="POST"
                           enctype="multipart/form-data">
 
@@ -474,7 +474,7 @@
                             </button>
 
                             <a
-                                href="{{ route('students.index') }}"
+                                href="{{ auth()->user()->role === 'admin' ? route('admin.students.index') : route('faculty.students.index') }}"
                                 class="btn btn-soft-primary"
                             >
                                 Back

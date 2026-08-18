@@ -38,7 +38,9 @@
 
             <div class="col-md-7 p-4 p-md-5">
 
-                {{-- Header --}}
+                {{-- ================================================= --}}
+                {{-- HEADER --}}
+                {{-- ================================================= --}}
 
                 <div class="mb-4 text-center">
 
@@ -58,67 +60,138 @@
 
 
                 {{-- ================================================= --}}
+                {{-- SUCCESS MESSAGE --}}
+                {{-- ================================================= --}}
+
+                @if(session('success'))
+
+                    <div class="alert alert-success alert-dismissible fade show"
+                         role="alert">
+
+                        {{ session('success') }}
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close">
+                        </button>
+
+                    </div>
+
+                @endif
+
+
+                {{-- ================================================= --}}
+                {{-- GENERAL ERROR MESSAGE --}}
+                {{-- ================================================= --}}
+
+                @if($errors->any())
+
+                    <div class="alert alert-danger">
+
+                        <ul class="mb-0 ps-3">
+
+                            @foreach($errors->all() as $error)
+
+                                <li>
+                                    {{ $error }}
+                                </li>
+
+                            @endforeach
+
+                        </ul>
+
+                    </div>
+
+                @endif
+
+
+                {{-- ================================================= --}}
                 {{-- LOGIN FORM --}}
                 {{-- ================================================= --}}
 
-                <form method="POST" action="{{ route('login.store') }}">
+                <form
+                    method="POST"
+                    action="{{ route('login.store') }}"
+                >
 
                     @csrf
 
 
-                    {{-- Email --}}
+                    {{-- ================================================= --}}
+                    {{-- EMAIL --}}
+                    {{-- ================================================= --}}
 
                     <div class="mb-3">
 
-                        <label class="form-label">
+                        <label
+                            for="email"
+                            class="form-label"
+                        >
                             Email address
                         </label>
 
                         <input
+                            id="email"
                             type="email"
                             name="email"
                             value="{{ old('email') }}"
                             class="form-control @error('email') is-invalid @enderror"
                             placeholder="Enter your email"
+                            autocomplete="email"
                             required
                             autofocus
                         >
 
                         @error('email')
+
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
+
                         @enderror
 
                     </div>
 
 
-                    {{-- Password --}}
+                    {{-- ================================================= --}}
+                    {{-- PASSWORD --}}
+                    {{-- ================================================= --}}
 
                     <div class="mb-3">
 
-                        <label class="form-label">
+                        <label
+                            for="password"
+                            class="form-label"
+                        >
                             Password
                         </label>
 
                         <input
+                            id="password"
                             type="password"
                             name="password"
                             class="form-control @error('password') is-invalid @enderror"
                             placeholder="Enter your password"
+                            autocomplete="current-password"
                             required
                         >
 
                         @error('password')
+
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
+
                         @enderror
 
                     </div>
 
 
-                    {{-- Remember Me --}}
+                    {{-- ================================================= --}}
+                    {{-- REMEMBER ME --}}
+                    {{-- ================================================= --}}
 
                     <div class="form-check mb-4">
 
@@ -140,7 +213,9 @@
                     </div>
 
 
-                    {{-- Login Button --}}
+                    {{-- ================================================= --}}
+                    {{-- LOGIN BUTTON --}}
+                    {{-- ================================================= --}}
 
                     <button
                         type="submit"
@@ -163,9 +238,9 @@
                     </p>
 
 
-                    {{-- ============================================= --}}
+                    {{-- ================================================= --}}
                     {{-- STUDENT REGISTRATION --}}
-                    {{-- ============================================= --}}
+                    {{-- ================================================= --}}
 
                     <a
                         href="{{ route('register') }}"
@@ -175,9 +250,9 @@
                     </a>
 
 
-                    {{-- ============================================= --}}
+                    {{-- ================================================= --}}
                     {{-- FACULTY REGISTRATION --}}
-                    {{-- ============================================= --}}
+                    {{-- ================================================= --}}
 
                     <a
                         href="{{ route('faculty.register') }}"
@@ -187,16 +262,18 @@
                     </a>
 
 
-                    {{-- ============================================= --}}
-                    {{-- ADMIN REGISTRATION --}}
-                    {{-- ============================================= --}}
+                    {{-- ================================================= --}}
+                    {{-- ADMIN REGISTRATION REMOVED --}}
+                    {{-- ================================================= --}}
 
-                    <a
-                        href="{{ route('admin.register') }}"
-                        class="btn btn-outline-danger w-100"
-                    >
-                        🛡️ Register as Admin
-                    </a>
+                    <div class="mt-3">
+
+                        <small class="text-muted">
+                            Admin accounts are created and managed
+                            by the system administrator.
+                        </small>
+
+                    </div>
 
                 </div>
 

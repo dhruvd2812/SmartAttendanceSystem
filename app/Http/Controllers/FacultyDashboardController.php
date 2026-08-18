@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AttendanceSession;
+use App\Models\Faculty;
 use App\Models\Student;
 use App\Models\Subject;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +11,10 @@ use Illuminate\Support\Facades\Auth;
 class FacultyDashboardController extends Controller
 {
     /**
-     * Display the Faculty Dashboard.
+     * Display the logged-in Faculty Dashboard.
+     *
+     * Allowed role:
+     * faculty
      */
     public function index()
     {
@@ -24,6 +28,7 @@ class FacultyDashboardController extends Controller
 
         $faculty = $user->faculty;
 
+
         /*
         |--------------------------------------------------------------------------
         | Default Values
@@ -36,6 +41,7 @@ class FacultyDashboardController extends Controller
         $studentCount = 0;
         $todayClasses = 0;
         $attendanceSessionCount = 0;
+
 
         /*
         |--------------------------------------------------------------------------
@@ -51,11 +57,15 @@ class FacultyDashboardController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            $subjects = Subject::where('faculty_id', $faculty->id)
+            $subjects = Subject::where(
+                'faculty_id',
+                $faculty->id
+            )
                 ->withCount('studentClasses')
                 ->orderBy('semester')
                 ->orderBy('name')
                 ->get();
+
 
             $subjectCount = $subjects->count();
 
@@ -121,18 +131,61 @@ class FacultyDashboardController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Return Faculty Dashboard
+        | Faculty Dashboard View
         |--------------------------------------------------------------------------
         */
 
-        return view('faculty.dashboard', compact(
-            'user',
-            'faculty',
-            'subjects',
-            'subjectCount',
-            'studentCount',
-            'todayClasses',
-            'attendanceSessionCount'
-        ));
+        return view(
+            'faculty.dashboard',
+            compact(
+                'user',
+                'faculty',
+                'subjects',
+                'subjectCount',
+                'studentCount',
+                'todayClasses',
+                'attendanceSessionCount'
+            )
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN → FACULTY DASHBOARD VIEW
+    |--------------------------------------------------------------------------
+    |
+    | Admin can view Faculty Dashboard information.
+    |
+    | IMPORTANT:
+    | This is a separate method because Auth::user() is ADMIN here,
+    | not Faculty.
+    |
+    */
+
+
+    public function adminView()
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | Get All Faculties
+        |--------------------------------------------------------------------------
+        */
+
+        $faculties = Faculty::with('department')
+            ->orderBy('faculty_name')
+            ->get();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Return Admin Faculty View
+        |--------------------------------------------------------------------------
+        */
+
+        return view(
+            'faculty.admin-view',
+            compact('faculties')
+        );
     }
 }

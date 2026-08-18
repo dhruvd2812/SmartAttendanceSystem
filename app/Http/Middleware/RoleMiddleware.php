@@ -30,27 +30,27 @@ class RoleMiddleware
 
         /*
         |--------------------------------------------------------------------------
-        | Get Logged-in User
+        | Get logged-in user's role
         |--------------------------------------------------------------------------
         */
 
-        $user = auth()->user();
+        $userRole = auth()->user()->role;
 
 
         /*
         |--------------------------------------------------------------------------
-        | Check User Role
+        | Check role permission
         |--------------------------------------------------------------------------
         */
 
-        if (!in_array($user->role, $roles, true)) {
-            abort(403, 'You are not authorized to access this page.');
+        if (!in_array($userRole, $roles, true)) {
+            abort(403, 'Unauthorized action.');
         }
 
 
         /*
         |--------------------------------------------------------------------------
-        | Allow Request
+        | Continue request
         |--------------------------------------------------------------------------
         */
 
