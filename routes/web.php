@@ -30,17 +30,64 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 
+
+/*
+|--------------------------------------------------------------------------
+| Login
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/login', [AuthController::class, 'showLogin'])
     ->name('login');
 
 Route::post('/login', [AuthController::class, 'login'])
     ->name('login.store');
 
+
+/*
+|--------------------------------------------------------------------------
+| Student Registration
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/register', [AuthController::class, 'showRegister'])
     ->name('register');
 
 Route::post('/register', [AuthController::class, 'register'])
     ->name('register.store');
+
+
+/*
+|--------------------------------------------------------------------------
+| Faculty Registration
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/faculty/register', [AuthController::class, 'showFacultyRegister'])
+    ->name('faculty.register');
+
+Route::post('/faculty/register', [AuthController::class, 'facultyRegister'])
+    ->name('faculty.register.store');
+
+
+/*
+|--------------------------------------------------------------------------
+| Admin Registration
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/admin/register', [AuthController::class, 'showAdminRegister'])
+    ->name('admin.register');
+
+Route::post('/admin/register', [AuthController::class, 'adminRegister'])
+    ->name('admin.register.store');
+
+
+/*
+|--------------------------------------------------------------------------
+| Logout
+|--------------------------------------------------------------------------
+*/
 
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
