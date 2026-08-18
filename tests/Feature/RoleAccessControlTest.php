@@ -171,4 +171,77 @@ class RoleAccessControlTest extends TestCase
         $this->actingAs($facultyUser);
         $this->get(route('faculty.students.create'))->assertOk();
     }
+
+    public function test_dashboard_preview_routes_follow_expected_role_matrix(): void
+    {
+        $department = Department::create([
+            'name' => 'Computer Science',
+            'department_name' => 'Computer Science',
+            'code' => 'CS',
+            'department_code' => 'CS',
+            'hod_name' => 'Dr. CS',
+            'email' => 'hod@cs.edu',
+            'phone' => '7777777777',
+            'description' => 'Computer Science Department',
+        ]);
+
+        $student = Student::create([
+            'enrollment_no' => 'ST-5001',
+            'first_name' => 'Preview',
+            'last_name' => 'Student',
+            'email' => 'preview@student.com',
+            'gender' => 'Male',
+            'department_id' => $department->id,
+            'semester' => 4,
+            'status' => 'active',
+        ]);
+
+        $admin = User::create([
+            'name' => 'Admin Preview',
+            'email' => 'admin-preview@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'admin',
+        ]);
+
+        $faculty = Faculty::create([
+            'faculty_name' => 'Faculty Preview',
+            'employee_id' => 'F-300',
+            'email' => 'faculty-preview@example.com',
+            'phone' => '8888888888',
+            'department_id' => $department->id,
+        ]);
+
+        $facultyUser = User::create([
+            'name' => 'Faculty Preview',
+            'email' => 'faculty-preview-login@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'faculty',
+            'faculty_id' => $faculty->id,
+        ]);
+
+        $studentUser = User::create([
+            'name' => 'Preview Student',
+            'email' => 'student-preview@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'student',
+            'student_id' => $student->id,
+        ]);
+
+        $this->actingAs($admin);
+        $this->get(route('admin.view.faculty.dashboard'))->assertOk();
+        $this->get(route('admin.view.student.dashboard'))->assertOk();
+        $this->get(route('dashboard'))->assertOk();
+
+        $this->actingAs($facultyUser);
+        $this->get(route('faculty.dashboard'))->assertOk();
+        $this->get(route('faculty.view.student.dashboard'))->assertOk();
+        $this->get(route('faculty.students.index'))->assertOk();
+        $this->get(route('dashboard'))->assertForbidden();
+
+        $this->actingAs($studentUser);
+        $this->get(route('student.dashboard'))->assertOk();
+        $this->get(route('faculty.dashboard'))->assertForbidden();
+        $this->get(route('faculty.students.index'))->assertForbidden();
+        $this->get(route('dashboard'))->assertForbidden();
+    }
 }

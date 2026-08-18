@@ -326,29 +326,17 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | FACULTY → STUDENT LIST
+    | FACULTY → STUDENTS
     |--------------------------------------------------------------------------
     |
-    | Faculty can see students.
+    | Faculty can manage their department students.
     |
     */
 
-    Route::get('/faculty/students', [
-        StudentController::class,
-        'index'
-    ])->name('faculty.students.index');
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | FACULTY → STUDENT DETAILS
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get('/faculty/students/{student}', [
-        StudentController::class,
-        'show'
-    ])->name('faculty.students.show');
+    Route::resource(
+        '/faculty/students',
+        StudentController::class
+    )->names('faculty.students');
 
 
     /*

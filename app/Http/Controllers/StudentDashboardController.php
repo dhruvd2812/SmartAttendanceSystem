@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
 
 class StudentDashboardController extends Controller
@@ -11,18 +12,13 @@ class StudentDashboardController extends Controller
      */
     public function index()
     {
-        // Get currently authenticated user
         $user = Auth::user();
-
-        // Get the student connected to this user
         $student = $user->student;
 
-        // Safety check
         if (!$student) {
             abort(403, 'No student profile is connected to this account.');
         }
 
-        // Get student's department
         $department = $student->department;
 
         return view('student.dashboard', compact(
@@ -31,22 +27,74 @@ class StudentDashboardController extends Controller
             'department'
         ));
     }
+
     public function profile()
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
+        $student = $user->student;
 
-    $student = $user->student;
+        if (!$student) {
+            abort(403, 'No student profile is connected to this account.');
+        }
 
-    if (!$student) {
-        abort(403, 'No student profile is connected to this account.');
+        $department = $student->department;
+
+        return view('student.profile', compact(
+            'user',
+            'student',
+            'department'
+        ));
     }
 
-    $department = $student->department;
+    /**
+     * Admin can preview a student dashboard.
+     */
+    public function adminView()
+    {
+        $user = Auth::user();
 
-    return view('student.profile', compact(
-        'user',
-        'student',
-        'department'
-    ));
-}
+        if ($user->role !== 'admin') {
+            abort(403, 'Only admin can access this preview.');
+        }
+
+        $student = Student::with('department')->first();
+
+        if (!$student) {
+            abort(404, 'No student found for dashboard preview.');
+        }
+
+        return view('student.dashboard', compact(
+            'user',
+            'student',
+        ));
+    }
+
+    /**
+     * Faculty can preview a student dashboard from their department.
+     */
+    public function facultyView()
+    {
+        $user = Auth::user();
+
+        if ($user->role !== 'faculty') {
+            abort(403, 'Only faculty can access this preview.');
+        }
+
+        if (!$user->faculty || !$user->faculty->department_id) {
+            abort(403, 'Faculty department is not assigned.');
+        }
+
+        $student = Student::with('department')
+            ->where('department_id', $user->faculty->department_id)
+            ->first();
+
+        if (!$student) {
+            abort(404, 'No student found in your department.');
+        }
+
+        return view('student.dashboard', compact(
+            'user',
+            'student',
+        ));
+    }
 }
