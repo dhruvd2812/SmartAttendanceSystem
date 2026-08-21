@@ -13,7 +13,7 @@ class StudentDashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $student = $user->student;
+        $student = $this->studentForUser($user);
 
         if (!$student) {
             abort(403, 'No student profile is connected to this account.');
@@ -31,7 +31,7 @@ class StudentDashboardController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        $student = $user->student;
+        $student = $this->studentForUser($user);
 
         if (!$student) {
             abort(403, 'No student profile is connected to this account.');
@@ -44,6 +44,28 @@ class StudentDashboardController extends Controller
             'student',
             'department'
         ));
+    }
+
+    private function studentForUser($user): ?Student
+    {
+        if ($user->student) {
+            return $user->student;
+        }
+
+        $student = Student::where('email', $user->email)->first();
+
+        if (!$student) {
+            $student = Student::whereRaw(
+                "LOWER(CONCAT(first_name, ' ', last_name)) = ?",
+                [strtolower(trim($user->name))]
+            )->first();
+        }
+
+        if ($student) {
+            $user->forceFill(['student_id' => $student->id])->save();
+        }
+
+        return $student;
     }
 
     /**

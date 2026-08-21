@@ -27,13 +27,6 @@ Route::get('/', function () {
 
 /*
 |--------------------------------------------------------------------------
-| AUTHENTICATION
-|--------------------------------------------------------------------------
-*/
-
-
-/*
-|--------------------------------------------------------------------------
 | LOGIN
 |--------------------------------------------------------------------------
 */
@@ -53,9 +46,6 @@ Route::post('/login', [
 |--------------------------------------------------------------------------
 | STUDENT REGISTRATION
 |--------------------------------------------------------------------------
-|
-| Public Student Registration
-|
 */
 
 Route::get('/register', [
@@ -73,9 +63,6 @@ Route::post('/register', [
 |--------------------------------------------------------------------------
 | FACULTY REGISTRATION
 |--------------------------------------------------------------------------
-|
-| Public Faculty Registration
-|
 */
 
 Route::get('/faculty/register', [
@@ -87,27 +74,6 @@ Route::post('/faculty/register', [
     AuthController::class,
     'facultyRegister'
 ])->name('faculty.register.store');
-
-
-/*
-|--------------------------------------------------------------------------
-| ADMIN REGISTRATION
-|--------------------------------------------------------------------------
-|
-| IMPORTANT:
-|
-| Admin Registration has been completely removed.
-|
-| There is NO:
-|
-| /admin/register
-| admin.register
-| admin.register.store
-|
-| Admin accounts must be created manually/securely.
-|
-|--------------------------------------------------------------------------
-*/
 
 
 /*
@@ -128,23 +94,7 @@ Route::post('/logout', [
 | ADMIN ROUTES
 |--------------------------------------------------------------------------
 |--------------------------------------------------------------------------
-|
-| Admin permissions:
-|
-| ✅ Admin Dashboard
-| ✅ Faculty Dashboard View
-| ✅ Student Dashboard View
-| ✅ All Students
-| ✅ Departments
-| ✅ Faculties
-| ✅ QR Generator
-| ✅ Chatbot
-|
-| ❌ Public Admin Registration
-|
-|--------------------------------------------------------------------------
 */
-
 
 Route::middleware([
     'auth',
@@ -167,10 +117,6 @@ Route::middleware([
     |--------------------------------------------------------------------------
     | ADMIN → FACULTY DASHBOARD
     |--------------------------------------------------------------------------
-    |
-    | This route will be enabled after adminView()
-    | is added to FacultyDashboardController.
-    |
     */
 
     Route::get('/admin/view/faculty-dashboard', [
@@ -183,10 +129,6 @@ Route::middleware([
     |--------------------------------------------------------------------------
     | ADMIN → STUDENT DASHBOARD
     |--------------------------------------------------------------------------
-    |
-    | This route will be enabled after adminView()
-    | is added to StudentDashboardController.
-    |
     */
 
     Route::get('/admin/view/student-dashboard', [
@@ -199,9 +141,6 @@ Route::middleware([
     |--------------------------------------------------------------------------
     | ADMIN → STUDENTS
     |--------------------------------------------------------------------------
-    |
-    | Admin can manage all students.
-    |
     */
 
     Route::resource(
@@ -276,24 +215,7 @@ Route::middleware([
 | FACULTY ROUTES
 |--------------------------------------------------------------------------
 |--------------------------------------------------------------------------
-|
-| Faculty permissions:
-|
-| ❌ Admin Dashboard
-| ❌ Departments
-| ❌ Faculties
-| ❌ Admin Registration
-|
-| ✅ Faculty Dashboard
-| ✅ Student Dashboard View
-| ✅ Student List
-| ✅ Student Details
-| ✅ QR Generator
-| ✅ Chatbot
-|
-|--------------------------------------------------------------------------
 */
-
 
 Route::middleware([
     'auth',
@@ -328,9 +250,6 @@ Route::middleware([
     |--------------------------------------------------------------------------
     | FACULTY → STUDENTS
     |--------------------------------------------------------------------------
-    |
-    | Faculty can manage their department students.
-    |
     */
 
     Route::resource(
@@ -381,23 +300,7 @@ Route::middleware([
 | STUDENT ROUTES
 |--------------------------------------------------------------------------
 |--------------------------------------------------------------------------
-|
-| Student permissions:
-|
-| ❌ Admin Dashboard
-| ❌ Faculty Dashboard
-| ❌ Faculty List
-| ❌ Department List
-| ❌ Other Student Pages
-|
-| ✅ Own Dashboard
-| ✅ Own Profile
-| ✅ Own Attendance
-| ✅ QR Scanner
-|
-|--------------------------------------------------------------------------
 */
-
 
 Route::middleware([
     'auth',
@@ -430,7 +333,7 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | STUDENT ATTENDANCE
+    | MY ATTENDANCE
     |--------------------------------------------------------------------------
     */
 
@@ -442,7 +345,19 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | STUDENT QR SCANNER
+    | ATTENDANCE HISTORY
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/student/attendance/history', [
+        StudentAttendanceController::class,
+        'history'
+    ])->name('student.attendance.history');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SCAN QR CODE
     |--------------------------------------------------------------------------
     */
 
@@ -450,5 +365,17 @@ Route::middleware([
         QrController::class,
         'scan'
     ])->name('student.scan-qr');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | TIMETABLE
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/student/timetable', [
+        StudentAttendanceController::class,
+        'timetable'
+    ])->name('student.timetable');
 
 });
