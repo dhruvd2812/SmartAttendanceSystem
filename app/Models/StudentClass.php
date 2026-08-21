@@ -10,14 +10,21 @@ class StudentClass extends Model
 {
     use HasFactory;
 
-    /**
-     * Database table.
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Database Table
+    |--------------------------------------------------------------------------
+    */
+
     protected $table = 'student_classes';
 
-    /**
-     * Mass assignable fields.
-     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Mass Assignable Fields
+    |--------------------------------------------------------------------------
+    */
+
     protected $fillable = [
         'student_id',
         'subject_id',
@@ -25,9 +32,13 @@ class StudentClass extends Model
         'semester',
     ];
 
-    /**
-     * Student assigned to this class.
-     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Student Relationship
+    |--------------------------------------------------------------------------
+    */
+
     public function student(): BelongsTo
     {
         return $this->belongsTo(
@@ -37,9 +48,13 @@ class StudentClass extends Model
         );
     }
 
-    /**
-     * Subject assigned to this class.
-     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Subject Relationship
+    |--------------------------------------------------------------------------
+    */
+
     public function subject(): BelongsTo
     {
         return $this->belongsTo(

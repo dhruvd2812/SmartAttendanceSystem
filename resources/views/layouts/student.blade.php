@@ -259,7 +259,7 @@
                     <span>Attendance History</span>
                 </a>
 
-                <a href="">
+                <a href="{{ route('student.subjects') }}">
                     <i class="fa-solid fa-book"></i>
                     <span>My Subjects</span>
                 </a>

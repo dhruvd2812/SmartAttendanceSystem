@@ -29,13 +29,8 @@ class Student extends Model
 
     /*
     |--------------------------------------------------------------------------
-    | Accessor: Full Name
+    | Full Name
     |--------------------------------------------------------------------------
-    |
-    | Allows us to use:
-    |
-    | $student->full_name
-    |
     */
 
     public function getFullNameAttribute()
@@ -48,11 +43,8 @@ class Student extends Model
 
     /*
     |--------------------------------------------------------------------------
-    | Department Relationship
+    | Department
     |--------------------------------------------------------------------------
-    |
-    | A student belongs to one department.
-    |
     */
 
     public function department()
@@ -66,11 +58,8 @@ class Student extends Model
 
     /*
     |--------------------------------------------------------------------------
-    | User Relationship
+    | User
     |--------------------------------------------------------------------------
-    |
-    | Each student has one login account.
-    |
     */
 
     public function user()
@@ -84,11 +73,8 @@ class Student extends Model
 
     /*
     |--------------------------------------------------------------------------
-    | Attendance Relationship
+    | Attendance
     |--------------------------------------------------------------------------
-    |
-    | A student can have many attendance records.
-    |
     */
 
     public function attendances()
@@ -102,11 +88,8 @@ class Student extends Model
 
     /*
     |--------------------------------------------------------------------------
-    | Student Classes Relationship
+    | Student Classes
     |--------------------------------------------------------------------------
-    |
-    | A student can be enrolled in multiple classes/subjects.
-    |
     */
 
     public function studentClasses()
@@ -120,11 +103,10 @@ class Student extends Model
 
     /*
     |--------------------------------------------------------------------------
-    | Subjects Relationship
+    | Subjects
     |--------------------------------------------------------------------------
     |
-    | This gives direct access to the student's subjects
-    | through the student_classes table.
+    | Student has many subjects through student_classes.
     |
     */
 

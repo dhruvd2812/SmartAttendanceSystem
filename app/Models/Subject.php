@@ -11,14 +11,21 @@ class Subject extends Model
 {
     use HasFactory;
 
-    /**
-     * Database table.
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Database Table
+    |--------------------------------------------------------------------------
+    */
+
     protected $table = 'subjects';
 
-    /**
-     * Mass assignable fields.
-     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Mass Assignable Fields
+    |--------------------------------------------------------------------------
+    */
+
     protected $fillable = [
         'name',
         'code',
@@ -28,33 +35,61 @@ class Subject extends Model
         'description',
     ];
 
-    /**
-     * Subject belongs to a faculty.
-     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Faculty Relationship
+    |--------------------------------------------------------------------------
+    */
+
     public function faculty(): BelongsTo
     {
-        return $this->belongsTo(Faculty::class, 'faculty_id', 'id');
+        return $this->belongsTo(
+            Faculty::class,
+            'faculty_id',
+            'id'
+        );
     }
 
-    /**
-     * Subject belongs to a department.
-     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Department Relationship
+    |--------------------------------------------------------------------------
+    */
+
     public function department(): BelongsTo
     {
-        return $this->belongsTo(Department::class, 'department_id', 'id');
+        return $this->belongsTo(
+            Department::class,
+            'department_id',
+            'id'
+        );
     }
 
-    /**
-     * Subject has many student-class records.
-     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Student Classes Relationship
+    |--------------------------------------------------------------------------
+    */
+
     public function studentClasses(): HasMany
     {
-        return $this->hasMany(StudentClass::class, 'subject_id', 'id');
+        return $this->hasMany(
+            StudentClass::class,
+            'subject_id',
+            'id'
+        );
     }
 
-    /**
-     * Subject has many attendance sessions.
-     */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Attendance Sessions Relationship
+    |--------------------------------------------------------------------------
+    */
+
     public function attendanceSessions(): HasMany
     {
         return $this->hasMany(

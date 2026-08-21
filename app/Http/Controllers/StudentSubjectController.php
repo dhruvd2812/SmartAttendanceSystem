@@ -2,35 +2,87 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
 
 class StudentSubjectController extends Controller
 {
-    /**
-     * Display student's subjects.
-     */
     public function index()
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Get Logged-in User
+        |--------------------------------------------------------------------------
+        */
+
         $user = Auth::user();
 
-        // Check whether the logged-in account
-        // is connected to a student record.
-        if (!$user->student_id) {
-            abort(403, 'No student profile is connected to this account.');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Get Student Profile
+        |--------------------------------------------------------------------------
+        */
+
+        $student = $user->student;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Check Student Profile
+        |--------------------------------------------------------------------------
+        */
+
+        if (!$student) {
+
+            return redirect()
+                ->route('student.dashboard')
+                ->with(
+                    'error',
+                    'No student profile is connected to this account.'
+                );
         }
 
-        // Find the logged-in student's record.
-        $student = Student::with([
-            'studentClasses.subject'
-        ])->findOrFail($user->student_id);
 
-        // Get the student's class/subject records.
-        $studentClasses = $student->studentClasses;
+        /*
+        |--------------------------------------------------------------------------
+        | Get Student Classes
+        |--------------------------------------------------------------------------
+        */
 
-        return view('student.subjects', compact(
-            'student',
-            'studentClasses'
-        ));
+        $studentClasses = $student
+            ->studentClasses()
+            ->with([
+                'subject',
+                'subject.faculty',
+                'subject.department',
+            ])
+            ->get();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Get Subjects
+        |--------------------------------------------------------------------------
+        */
+
+        $subjects = $studentClasses
+            ->pluck('subject')
+            ->filter()
+            ->unique('id')
+            ->values();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Send Data To View
+        |--------------------------------------------------------------------------
+        */
+
+        return view(
+            'student.subjects',
+            compact(
+                'subjects'
+            )
+        );
     }
 }
