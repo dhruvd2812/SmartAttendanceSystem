@@ -6,7 +6,10 @@
 
 <div class="container-fluid">
 
-    {{-- Welcome --}}
+    {{-- ========================================================= --}}
+    {{-- WELCOME --}}
+    {{-- ========================================================= --}}
+
     <section class="app-hero p-4 p-md-5 mb-4">
 
         <p class="mb-2 opacity-75">
@@ -24,7 +27,10 @@
     </section>
 
 
-    {{-- Student Summary --}}
+    {{-- ========================================================= --}}
+    {{-- STUDENT SUMMARY --}}
+    {{-- ========================================================= --}}
+
     <div class="row g-4 mb-4">
 
         {{-- Student Name --}}
@@ -118,7 +124,10 @@
     </div>
 
 
-    {{-- My Profile --}}
+    {{-- ========================================================= --}}
+    {{-- MY PROFILE --}}
+    {{-- ========================================================= --}}
+
     <section class="card app-card border-0 shadow-sm rounded-4 mb-4">
 
         <div class="card-body p-4">
@@ -138,6 +147,7 @@
 
             <div class="row g-3">
 
+                {{-- First Name --}}
                 <div class="col-12 col-md-6">
 
                     <div class="p-3 bg-light rounded-3">
@@ -155,6 +165,7 @@
                 </div>
 
 
+                {{-- Last Name --}}
                 <div class="col-12 col-md-6">
 
                     <div class="p-3 bg-light rounded-3">
@@ -172,6 +183,7 @@
                 </div>
 
 
+                {{-- Enrollment Number --}}
                 <div class="col-12 col-md-6">
 
                     <div class="p-3 bg-light rounded-3">
@@ -189,6 +201,7 @@
                 </div>
 
 
+                {{-- Gender --}}
                 <div class="col-12 col-md-6">
 
                     <div class="p-3 bg-light rounded-3">
@@ -206,6 +219,7 @@
                 </div>
 
 
+                {{-- Email --}}
                 <div class="col-12 col-md-6">
 
                     <div class="p-3 bg-light rounded-3">
@@ -223,6 +237,7 @@
                 </div>
 
 
+                {{-- Mobile --}}
                 <div class="col-12 col-md-6">
 
                     <div class="p-3 bg-light rounded-3">
@@ -240,6 +255,7 @@
                 </div>
 
 
+                {{-- Department --}}
                 <div class="col-12 col-md-6">
 
                     <div class="p-3 bg-light rounded-3">
@@ -257,6 +273,7 @@
                 </div>
 
 
+                {{-- Academic Year --}}
                 <div class="col-12 col-md-6">
 
                     <div class="p-3 bg-light rounded-3">
@@ -280,7 +297,10 @@
     </section>
 
 
-    {{-- Quick Actions --}}
+    {{-- ========================================================= --}}
+    {{-- QUICK ACTIONS --}}
+    {{-- ========================================================= --}}
+
     <section class="card app-card border-0 shadow-sm rounded-4">
 
         <div class="card-body p-4">
@@ -289,22 +309,42 @@
                 Quick Actions
             </h2>
 
+
             <div class="d-flex flex-column flex-sm-row gap-2">
 
-                <a href="{{ route('student.attendance') }}" class="btn btn-primary">
+                {{-- My Attendance --}}
+                <a href="{{ route('student.attendance') }}"
+                   class="btn btn-primary">
+
                     📊 My Attendance
+
                 </a>
 
-                <a href="{{ route('student.scan-qr') }}" class="btn btn-outline-primary">
+
+                {{-- Scan QR Code --}}
+                <a href="{{ route('student.scan-qr') }}"
+                   class="btn btn-outline-primary">
+
                     📷 Scan QR Code
+
                 </a>
 
-                <a href="#" class="btn btn-outline-primary">
+
+                {{-- Attendance History --}}
+                <a href="{{ route('student.attendance.history') }}"
+                   class="btn btn-outline-primary">
+
                     📅 Attendance History
+
                 </a>
 
-                <a href="#" class="btn btn-outline-primary">
+
+                {{-- Timetable --}}
+                <a href="{{ route('student.timetable') }}"
+                   class="btn btn-outline-primary">
+
                     🗓️ Timetable
+
                 </a>
 
             </div>
