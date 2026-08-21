@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Notice;
 
 class StudentNoticeController extends Controller
 {
@@ -11,6 +11,10 @@ class StudentNoticeController extends Controller
      */
     public function index()
     {
-        return view('student.notices');
+        $notices = Notice::where('is_active', true)
+            ->latest()
+            ->get();
+
+        return view('student.notices', compact('notices'));
     }
 }

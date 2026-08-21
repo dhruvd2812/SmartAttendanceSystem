@@ -13,6 +13,7 @@ use App\Http\Controllers\StudentAttendanceController;
 use App\Http\Controllers\StudentSubjectController;
 use App\Http\Controllers\StudentTimetableController;
 use App\Http\Controllers\StudentNoticeController;
+use App\Http\Controllers\NoticeController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -208,6 +209,34 @@ Route::middleware([
         ChatbotController::class,
         'message'
     ])->name('admin.chatbot.message');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN → NOTICES
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/notices', [
+        NoticeController::class,
+        'index'
+    ])->name('notices.index');
+
+    Route::get('/notices/create', [
+        NoticeController::class,
+        'create'
+    ])->name('notices.create');
+
+    Route::post('/notices', [
+        NoticeController::class,
+        'store'
+    ])->name('notices.store');
+
+    Route::delete('/notices/{notice}', [
+        NoticeController::class,
+        'destroy'
+    ])->name('notices.destroy');
+
 });
 
 
@@ -292,6 +321,34 @@ Route::middleware([
         ChatbotController::class,
         'message'
     ])->name('faculty.chatbot.message');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FACULTY → NOTICES
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/notices', [
+        NoticeController::class,
+        'index'
+    ])->name('notices.index');
+
+    Route::get('/notices/create', [
+        NoticeController::class,
+        'create'
+    ])->name('notices.create');
+
+    Route::post('/notices', [
+        NoticeController::class,
+        'store'
+    ])->name('notices.store');
+
+    Route::delete('/notices/{notice}', [
+        NoticeController::class,
+        'destroy'
+    ])->name('notices.destroy');
+
 });
 
 
@@ -402,4 +459,5 @@ Route::middleware([
         QrController::class,
         'scan'
     ])->name('student.scan-qr');
+
 });
