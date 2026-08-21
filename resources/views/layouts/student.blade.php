@@ -244,32 +244,32 @@
     		  <span>My Profile</span>
 		</a>
 
-                <a href="#">
+                <a href="{{ route('student.attendance') }}">
                     <i class="fa-solid fa-chart-column"></i>
                     <span>My Attendance</span>
                 </a>
 
-                <a href="#">
+                <a href="{{ route('student.scan-qr') }}">
                     <i class="fa-solid fa-qrcode"></i>
                     <span>Scan QR Code</span>
                 </a>
 
-                <a href="#">
+                <a href="{{ route('student.attendance.history') }}">
                     <i class="fa-solid fa-calendar-days"></i>
                     <span>Attendance History</span>
                 </a>
 
-                <a href="#">
+                <a href="">
                     <i class="fa-solid fa-book"></i>
                     <span>My Subjects</span>
                 </a>
 
-                <a href="#">
+                <a href="{{ route('student.timetable') }}">
                     <i class="fa-solid fa-calendar"></i>
                     <span>Timetable</span>
                 </a>
 
-                <a href="#">
+                <a href="{{ route('student.notices') }}">
                     <i class="fa-solid fa-bullhorn"></i>
                     <span>Notices</span>
                 </a>

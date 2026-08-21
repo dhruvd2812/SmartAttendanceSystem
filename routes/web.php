@@ -10,6 +10,9 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\StudentAttendanceController;
+use App\Http\Controllers\StudentSubjectController;
+use App\Http\Controllers\StudentTimetableController;
+use App\Http\Controllers\StudentNoticeController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -205,7 +208,6 @@ Route::middleware([
         ChatbotController::class,
         'message'
     ])->name('admin.chatbot.message');
-
 });
 
 
@@ -290,7 +292,6 @@ Route::middleware([
         ChatbotController::class,
         'message'
     ])->name('faculty.chatbot.message');
-
 });
 
 
@@ -333,7 +334,43 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | MY ATTENDANCE
+    | STUDENT → MY SUBJECTS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/student/subjects', [
+        StudentSubjectController::class,
+        'index'
+    ])->name('student.subjects');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | STUDENT → TIMETABLE
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/student/timetable', [
+        StudentTimetableController::class,
+        'index'
+    ])->name('student.timetable');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | STUDENT → NOTICES
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/student/notices', [
+        StudentNoticeController::class,
+        'index'
+    ])->name('student.notices');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | STUDENT → MY ATTENDANCE
     |--------------------------------------------------------------------------
     */
 
@@ -345,7 +382,7 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | ATTENDANCE HISTORY
+    | STUDENT → ATTENDANCE HISTORY
     |--------------------------------------------------------------------------
     */
 
@@ -357,7 +394,7 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | SCAN QR CODE
+    | STUDENT → SCAN QR CODE
     |--------------------------------------------------------------------------
     */
 
@@ -365,17 +402,4 @@ Route::middleware([
         QrController::class,
         'scan'
     ])->name('student.scan-qr');
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | TIMETABLE
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get('/student/timetable', [
-        StudentAttendanceController::class,
-        'timetable'
-    ])->name('student.timetable');
-
 });

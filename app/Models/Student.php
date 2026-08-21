@@ -29,6 +29,25 @@ class Student extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | Accessor: Full Name
+    |--------------------------------------------------------------------------
+    |
+    | Allows us to use:
+    |
+    | $student->full_name
+    |
+    */
+
+    public function getFullNameAttribute()
+    {
+        return trim(
+            $this->first_name . ' ' . $this->last_name
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Department Relationship
     |--------------------------------------------------------------------------
     |
@@ -50,7 +69,7 @@ class Student extends Model
     | User Relationship
     |--------------------------------------------------------------------------
     |
-    | Each student has one login account in users table.
+    | Each student has one login account.
     |
     */
 
@@ -67,6 +86,9 @@ class Student extends Model
     |--------------------------------------------------------------------------
     | Attendance Relationship
     |--------------------------------------------------------------------------
+    |
+    | A student can have many attendance records.
+    |
     */
 
     public function attendances()
@@ -82,6 +104,9 @@ class Student extends Model
     |--------------------------------------------------------------------------
     | Student Classes Relationship
     |--------------------------------------------------------------------------
+    |
+    | A student can be enrolled in multiple classes/subjects.
+    |
     */
 
     public function studentClasses()
@@ -89,6 +114,27 @@ class Student extends Model
         return $this->hasMany(
             StudentClass::class,
             'student_id'
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Subjects Relationship
+    |--------------------------------------------------------------------------
+    |
+    | This gives direct access to the student's subjects
+    | through the student_classes table.
+    |
+    */
+
+    public function subjects()
+    {
+        return $this->belongsToMany(
+            Subject::class,
+            'student_classes',
+            'student_id',
+            'subject_id'
         );
     }
 }
