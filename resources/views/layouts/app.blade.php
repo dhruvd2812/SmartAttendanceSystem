@@ -703,6 +703,18 @@
 
                     </li>
 
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link
+                            {{ request()->routeIs('faculty.subjects.*') ? 'active' : '' }}"
+                            href="{{ route('faculty.subjects.index') }}"
+                        >
+                            Subjects
+                        </a>
+
+                    </li>
+
 
                     {{-- QR Generator --}}
 

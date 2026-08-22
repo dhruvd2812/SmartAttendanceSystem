@@ -14,6 +14,7 @@ use App\Http\Controllers\StudentSubjectController;
 use App\Http\Controllers\StudentTimetableController;
 use App\Http\Controllers\StudentNoticeController;
 use App\Http\Controllers\NoticeController;
+use App\Http\Controllers\SubjectController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -263,6 +264,11 @@ Route::middleware([
         FacultyDashboardController::class,
         'index'
     ])->name('faculty.dashboard');
+
+    Route::resource(
+        '/faculty/subjects',
+        SubjectController::class
+    )->except(['show', 'create'])->names('faculty.subjects');
 
 
     /*

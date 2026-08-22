@@ -24,7 +24,10 @@
 
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
-            <h4 class="mb-4">Quick Actions</h4>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="mb-0">Quick Actions</h4>
+                <a href="{{ route('faculty.subjects.index') }}" class="btn btn-outline-primary">Manage Subjects</a>
+            </div>
             <div class="row g-3">
                 <div class="col-md-6 col-lg-4"><a href="{{ route('faculty.qr.index') }}" class="btn btn-primary w-100 py-3">📱<br>Generate QR Code</a></div>
                 <div class="col-md-6 col-lg-4"><a href="{{ route('faculty.students.index') }}" class="btn btn-success w-100 py-3">👨‍🎓<br>View Students</a></div>
