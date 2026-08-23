@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
@@ -12,6 +12,11 @@
     <title>
         @yield('title', 'Smart Attendance')
     </title>
+
+    {{-- Google Fonts --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     {{-- Bootstrap --}}
     <link
@@ -28,13 +33,24 @@
     <style>
 
         :root {
-            --color-bg: #f4f6ff;
+            --color-bg: #f8fafc;
             --color-surface: #ffffff;
-            --color-surface-soft: #eff2ff;
+            --color-surface-soft: #f1f5f9;
             --color-primary: #4f46e5;
-            --color-primary-soft: rgba(79, 70, 229, 0.12);
-            --color-heading: #111827;
-            --color-muted: #6b7280;
+            --color-primary-hover: #4338ca;
+            --color-primary-soft: rgba(79, 70, 229, 0.1);
+            --color-accent: #06b6d4;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+            --color-heading: #0f172a;
+            --color-muted: #64748b;
+            --border-radius-sm: 0.5rem;
+            --border-radius-md: 0.875rem;
+            --border-radius-lg: 1.25rem;
+            --shadow-soft: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+            --shadow-card: 0 10px 30px -4px rgba(15, 23, 42, 0.06), 0 4px 10px -2px rgba(15, 23, 42, 0.03);
+            --shadow-hover: 0 20px 40px -6px rgba(79, 70, 229, 0.12), 0 8px 16px -4px rgba(15, 23, 42, 0.04);
         }
 
         * {
@@ -48,29 +64,15 @@
         body {
             min-height: 100vh;
             margin: 0;
-
-            font-family:
-                ui-sans-serif,
-                system-ui,
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                sans-serif;
-
-            background:
-                radial-gradient(
-                    circle at top left,
-                    rgba(79,70,229,.15),
-                    transparent 32%
-                ),
-                linear-gradient(
-                    180deg,
-                    #f8fbff 0%,
-                    #f4f6ff 60%,
-                    #ffffff 100%
-                );
-
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--color-bg);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.06) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(79, 70, 229, 0.05) 0px, transparent 50%);
+            background-attachment: fixed;
             color: var(--color-heading);
+            -webkit-font-smoothing: antialiased;
         }
 
         /* =========================================================
@@ -78,62 +80,123 @@
         ========================================================== */
 
         .app-navbar {
-            background: #312e81;
-
-            box-shadow:
-                0 18px 45px rgba(49, 46, 129, 0.16);
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1020;
         }
 
         .app-navbar .navbar-brand {
-            font-weight: 700;
-            letter-spacing: 0.02em;
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+            font-size: 1.1rem;
         }
 
         .app-navbar .nav-link {
-            color: rgba(255,255,255,0.85);
-            transition: color .2s ease;
+            color: #94a3b8;
+            font-weight: 500;
+            font-size: 0.925rem;
+            padding: 0.5rem 0.85rem;
+            border-radius: var(--border-radius-sm);
+            transition: all 0.2s ease;
         }
 
-        .app-navbar .nav-link:hover,
+        .app-navbar .nav-link:hover {
+            color: #f8fafc;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
         .app-navbar .nav-link.active {
             color: #ffffff;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            font-weight: 600;
         }
 
         /* =========================================================
-           CARDS
+           CARDS & SURFACES
         ========================================================== */
 
-        .app-card {
-            border:
-                1px solid rgba(15, 23, 42, .08);
+        .app-card,
+        .card {
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: var(--border-radius-lg);
+            background: #ffffff;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
 
-            border-radius: 1.5rem;
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
 
-            background:
-                var(--color-surface);
+        .card-header {
+            background-color: transparent;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 1.25rem 1.5rem;
+            font-weight: 600;
+        }
 
-            box-shadow:
-                0 24px 50px rgba(15, 23, 42, .08);
+        .card-body {
+            padding: 1.5rem;
         }
 
         /* =========================================================
-           HERO
+           HERO SECTION
         ========================================================== */
 
         .app-hero {
-            border-radius: 1.75rem;
+            border-radius: var(--border-radius-lg);
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(49, 46, 129, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-            background:
-                linear-gradient(
-                    135deg,
-                    #4f46e5 0%,
-                    #2563eb 100%
-                );
+        .app-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+            pointer-events: none;
+        }
 
-            color: #fff;
-
-            box-shadow:
-                0 24px 60px rgba(79, 70, 229, .18);
+        .app-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: 10%;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         /* =========================================================
@@ -141,55 +204,119 @@
         ========================================================== */
 
         .app-metric .card-body {
-            min-height: 175px;
+            min-height: 150px;
         }
 
-        .app-metric .display-6 {
-            font-size: 2.5rem;
+        .metric-icon-wrapper {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.08);
+        }
+
+        .metric-icon-indigo { background: rgba(79, 70, 229, 0.12); color: #4f46e5; }
+        .metric-icon-cyan { background: rgba(6, 182, 212, 0.12); color: #0891b2; }
+        .metric-icon-emerald { background: rgba(16, 185, 129, 0.12); color: #059669; }
+        .metric-icon-amber { background: rgba(245, 158, 11 chips, 0.12); color: #d97706; }
+
+        /* =========================================================
+           TABLES
+        ========================================================== */
+
+        .app-table thead,
+        .table thead {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 0.825rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+        }
+
+        .table > :not(caption) > * > * {
+            padding: 1rem 1.25rem;
+            border-bottom-color: #f1f5f9;
+        }
+
+        .table tbody tr {
+            transition: background-color 0.15s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(99, 102, 241, 0.03);
         }
 
         /* =========================================================
-           TABLE
+           BUTTONS
         ========================================================== */
 
-        .app-table thead {
-            background: #eff6ff;
+        .btn {
+            font-weight: 600;
+            border-radius: var(--border-radius-sm);
+            padding: 0.625rem 1.25rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .app-table tbody tr:hover {
-            background:
-                rgba(79, 70, 229, .05);
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+            border: 1px solid #4338ca;
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
         }
 
-        /* =========================================================
-           BUTTON
-        ========================================================== */
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%);
+            border-color: #3730a3;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+        }
 
         .btn-soft-primary {
-            color: #312e81;
-
-            background:
-                rgba(79, 70, 229, .12);
-
-            border:
-                1px solid rgba(79, 70, 229, .16);
+            color: #4338ca;
+            background: rgba(79, 70, 229, 0.1);
+            border: 1px solid rgba(79, 70, 229, 0.15);
         }
 
         .btn-soft-primary:hover {
-            background:
-                rgba(79, 70, 229, .18);
+            background: rgba(79, 70, 229, 0.18);
+            color: #312e81;
+            transform: translateY(-1px);
         }
 
         /* =========================================================
-           FORM
+           FORMS
         ========================================================== */
 
         .form-control,
         .form-select {
-            border-radius: 1rem;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid #cbd5e1;
+            padding: 0.7rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background-color: #ffffff;
+        }
 
-            border-color:
-                rgba(15,23,42,.12);
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+            outline: none;
+        }
+
+        /* =========================================================
+           BADGES
+        ========================================================== */
+
+        .badge {
+            font-weight: 600;
+            padding: 0.45rem 0.8rem;
+            border-radius: 9999px;
+            letter-spacing: 0.02em;
         }
 
         /* =========================================================
@@ -197,13 +324,10 @@
         ========================================================== */
 
         .alert-custom {
-            border-radius: 1rem;
-
-            border:
-                1px solid rgba(34,170,250,.16);
-
-            background:
-                rgba(224, 242, 254, .82);
+            border-radius: var(--border-radius-md);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            background: rgba(238, 242, 255, 0.8);
+            backdrop-filter: blur(8px);
         }
 
         /* =========================================================
@@ -211,24 +335,18 @@
         ========================================================== */
 
         .auth-card {
-            max-width: 460px;
-
-            border-radius: 1.75rem;
-
+            max-width: 900px;
+            border-radius: var(--border-radius-lg);
             overflow: hidden;
-
             background: #ffffff;
+            box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.15);
+            border: 1px solid rgba(226, 232, 240, 0.8);
         }
 
         .auth-hero {
-            background:
-                linear-gradient(
-                    135deg,
-                    #4f46e5 0%,
-                    #2563eb 100%
-                );
-
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);
             color: white;
+            position: relative;
         }
 
         /* =========================================================
@@ -517,34 +635,13 @@
              BRAND
         ====================================================== --}}
 
-        @if(auth()->user()->role === 'admin')
-
-            <a
-                class="navbar-brand"
-                href="{{ route('dashboard') }}"
-            >
-                Smart Attendance
-            </a>
-
-        @elseif(auth()->user()->role === 'faculty')
-
-            <a
-                class="navbar-brand"
-                href="{{ route('faculty.dashboard') }}"
-            >
-                Smart Attendance
-            </a>
-
-        @else
-
-            <a
-                class="navbar-brand"
-                href="{{ route('login') }}"
-            >
-                Smart Attendance
-            </a>
-
-        @endif
+        <a
+            class="navbar-brand text-white"
+            href="{{ auth()->user()->role === 'admin' ? route('dashboard') : (auth()->user()->role === 'faculty' ? route('faculty.dashboard') : (auth()->user()->role === 'student' ? route('student.dashboard') : route('login'))) }}"
+        >
+            <span class="brand-badge"><i class="bi bi-qr-code-scan"></i></span>
+            <span>Smart<span style="color: #818cf8;">Attendance</span></span>
+        </a>
 
 
         {{-- Mobile menu button --}}
@@ -860,7 +957,7 @@
 
 @auth
 
-    @if(in_array(auth()->user()->role, ['admin', 'faculty']))
+    @if(in_array(auth()->user()->role, ['admin', 'faculty', 'student']))
 
         @include('partials.chatbot-widget')
 
