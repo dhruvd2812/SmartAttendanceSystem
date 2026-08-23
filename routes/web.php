@@ -466,4 +466,26 @@ Route::middleware([
         'scan'
     ])->name('student.scan-qr');
 
+    Route::post('/student/attendance/scan', [
+        QrController::class,
+        'markAttendance'
+    ])->name('student.attendance.scan');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | STUDENT → CHATBOT
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/student/chatbot', [
+        ChatbotController::class,
+        'index'
+    ])->name('student.chatbot.index');
+
+    Route::post('/student/chatbot/message', [
+        ChatbotController::class,
+        'message'
+    ])->name('student.chatbot.message');
+
 });
