@@ -333,11 +333,29 @@ class ChatbotController extends Controller
 
     private function student($user): ?Student
     {
-        if (!$user->student_id) {
-            return null;
+        if ($user->student) {
+            return $user->student;
         }
 
-        return Student::find($user->student_id);
+        if ($user->student_id) {
+            $student = Student::find($user->student_id);
+            if ($student) return $student;
+        }
+
+        $student = Student::where('email', $user->email)->first();
+
+        if (!$student && !empty($user->name)) {
+            $student = Student::whereRaw(
+                "LOWER(CONCAT(first_name, ' ', last_name)) = ?",
+                [strtolower(trim($user->name))]
+            )->first();
+        }
+
+        if ($student && !$user->student_id) {
+            $user->forceFill(['student_id' => $student->id])->save();
+        }
+
+        return $student;
     }
 
     private function studentAttendance($user, ?Subject $subject): string
