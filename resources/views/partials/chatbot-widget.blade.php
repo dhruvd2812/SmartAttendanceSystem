@@ -55,20 +55,26 @@
             {{-- Suggestions chips --}}
             <div class="chatbot-chips" data-chat-chips>
                 @if(auth()->check() && auth()->user()->role === 'student')
-                    <button type="button" class="chat-chip" data-chip="My attendance">📊 My Attendance</button>
-                    <button type="button" class="chat-chip" data-chip="Today attendance">📅 Today's Attendance</button>
-                    <button type="button" class="chat-chip" data-chip="How to scan QR">📱 How to Scan QR</button>
-                    <button type="button" class="chat-chip" data-chip="List subjects">📚 My Subjects</button>
+                    <button type="button" class="chat-chip" data-chip="What is my attendance?">📊 My Attendance</button>
+                    <button type="button" class="chat-chip" data-chip="Can I bunk class?">🎯 Can I Bunk?</button>
+                    <button type="button" class="chat-chip" data-chip="Did I attend any classes today?">📅 Today's Attendance</button>
+                    <button type="button" class="chat-chip" data-chip="What lectures do I have today?">🗓️ Today's Schedule</button>
+                    <button type="button" class="chat-chip" data-chip="What subjects do I have?">📚 My Subjects</button>
+                    <button type="button" class="chat-chip" data-chip="Show latest notices">📢 Notices</button>
+                    <button type="button" class="chat-chip" data-chip="How to scan QR code?">📱 QR Help</button>
                 @elseif(auth()->check() && auth()->user()->role === 'faculty')
-                    <button type="button" class="chat-chip" data-chip="My subjects">📚 My Subjects</button>
-                    <button type="button" class="chat-chip" data-chip="Today attendance">🗓️ Today's Classes</button>
-                    <button type="button" class="chat-chip" data-chip="Total students">👨‍🎓 Total Students</button>
-                    <button type="button" class="chat-chip" data-chip="Generate QR">📱 Generate QR Help</button>
+                    <button type="button" class="chat-chip" data-chip="What subjects am I teaching?">📚 My Subjects</button>
+                    <button type="button" class="chat-chip" data-chip="What classes do I have today?">🗓️ Today's Lectures</button>
+                    <button type="button" class="chat-chip" data-chip="Show attendance summary for my lectures">📈 Attendance Report</button>
+                    <button type="button" class="chat-chip" data-chip="How do I generate a classroom QR code?">📱 Generate QR Help</button>
+                    <button type="button" class="chat-chip" data-chip="How many students are in my department?">👨‍🎓 Total Students</button>
+                    <button type="button" class="chat-chip" data-chip="Latest notices">📢 Notices</button>
                 @else
-                    <button type="button" class="chat-chip" data-chip="Total students">👨‍🎓 Total Students</button>
-                    <button type="button" class="chat-chip" data-chip="Total faculty">👨‍🏫 Total Faculty</button>
-                    <button type="button" class="chat-chip" data-chip="List departments">🏢 Departments</button>
-                    <button type="button" class="chat-chip" data-chip="Help">❓ System Help</button>
+                    <button type="button" class="chat-chip" data-chip="Overall university attendance rate">📊 Overall Attendance</button>
+                    <button type="button" class="chat-chip" data-chip="Total student count">👨‍🎓 Total Students</button>
+                    <button type="button" class="chat-chip" data-chip="Faculty and staff overview">👨‍🏫 Faculty Overview</button>
+                    <button type="button" class="chat-chip" data-chip="List all departments">🏢 Departments</button>
+                    <button type="button" class="chat-chip" data-chip="Latest campus notices">📢 Notices</button>
                 @endif
             </div>
         </div>
@@ -401,11 +407,30 @@
         }
     };
 
+    const formatBotMarkdown = (raw) => {
+        let esc = raw
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+
+        // Bold **text**
+        esc = esc.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // Italics *text*
+        esc = esc.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        // Divider line
+        esc = esc.replace(/━━━━━━━━━━━━━━━━━━━━━━━━━━━━━/g, '<hr class="my-2 border-secondary-subtle">');
+        // Line breaks
+        esc = esc.replace(/\n/g, '<br>');
+        return esc;
+    };
+
     const appendMessage = (text, type, isHtml = false) => {
         const item = document.createElement('div');
         item.className = `attendance-chatbot__message attendance-chatbot__message--${type}`;
         if (isHtml) {
             item.innerHTML = text;
+        } else if (type === 'bot') {
+            item.innerHTML = formatBotMarkdown(text);
         } else {
             item.textContent = text;
         }
