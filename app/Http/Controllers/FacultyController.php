@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Faculty;
 use App\Models\Department;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class FacultyController extends Controller
@@ -41,13 +42,15 @@ public function store(Request $request)
         'department_id' => 'required|exists:departments,id',
     ]);
 
-    Faculty::create([
+    $faculty = Faculty::create([
         'faculty_name'  => $request->faculty_name,
         'employee_id'   => $request->employee_id,
         'email'         => $request->email,
         'phone'         => $request->phone,
         'department_id' => $request->department_id,
     ]);
+
+    $this->linkFacultyLogin($faculty);
 
     return redirect()->route('faculties.index')
                      ->with('success', 'Faculty Added Successfully');
@@ -84,6 +87,8 @@ public function store(Request $request)
             'department_id' => $request->department_id,
         ]);
 
+        $this->linkFacultyLogin($faculty);
+
         return redirect()->route('faculties.index')
             ->with('success', 'Faculty Updated Successfully.');
     }
@@ -97,5 +102,13 @@ public function store(Request $request)
 
         return redirect()->route('faculties.index')
             ->with('success', 'Faculty Deleted Successfully.');
+    }
+
+    /** Link an existing faculty login when its email matches the profile. */
+    private function linkFacultyLogin(Faculty $faculty): void
+    {
+        User::where('role', 'faculty')
+            ->where('email', $faculty->email)
+            ->update(['faculty_id' => $faculty->id]);
     }
 }
