@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\FacultyDashboardController;
+use App\Http\Controllers\FacultyAttendanceController;
 use App\Http\Controllers\QrController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\ChatbotController;
@@ -264,6 +265,11 @@ Route::middleware([
         FacultyDashboardController::class,
         'index'
     ])->name('faculty.dashboard');
+
+    Route::get('/faculty/attendance', [
+        FacultyAttendanceController::class,
+        'index'
+    ])->name('faculty.attendance.index');
 
     Route::resource(
         '/faculty/subjects',
