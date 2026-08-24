@@ -1,107 +1,53 @@
 @extends('layouts.app')
 
-@section('content')
+@section('title', 'Faculties | Smart Attendance')
 
-<div class="container mt-4">
+@section('content')
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
+        <div>
+            <p class="text-muted mb-1">Administration</p>
+            <h1 class="h3 mb-1">Faculties</h1>
+            <p class="text-muted small mb-0">{{ $faculties->count() }} faculty {{ $faculties->count() === 1 ? 'member' : 'members' }} found</p>
+        </div>
+        <a href="{{ route('faculties.create') }}" class="btn btn-primary">+ Add Faculty</a>
+    </div>
 
     @if(session('success'))
-        <div class="alert alert-success">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 
-    <div class="card shadow">
-
-        <div class="card-header bg-dark text-white d-flex justify-content-between">
-
-            <h4>Faculty List</h4>
-
-            <a href="{{ route('faculties.create') }}" class="btn btn-success">
-                Add Faculty
-            </a>
-
+    <section class="card app-card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table app-table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr><th>#</th><th>Faculty Name</th><th>Employee ID</th><th>Email</th><th>Phone</th><th>Department</th><th class="text-end">Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        @forelse($faculties as $faculty)
+                            <tr>
+                                <td class="text-muted">{{ $faculty->id }}</td>
+                                <td class="fw-semibold">{{ $faculty->faculty_name }}</td>
+                                <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ $faculty->employee_id }}</span></td>
+                                <td>{{ $faculty->email }}</td><td>{{ $faculty->phone }}</td>
+                                <td>{{ $faculty->department->department_name ?? $faculty->department->name ?? 'N/A' }}</td>
+                                <td class="text-end text-nowrap">
+                                    <a href="{{ route('faculties.edit', $faculty) }}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                                    <form action="{{ route('faculties.destroy', $faculty) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this faculty member? This cannot be undone.');">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="7" class="text-center py-5 text-muted">No faculty members found. <a href="{{ route('faculties.create') }}">Add the first faculty member</a>.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
-
-        <div class="card-body">
-
-            <table class="table table-bordered table-hover">
-
-                <thead class="table-dark">
-
-                <tr>
-
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Employee ID</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Department</th>
-                    <th width="180">Action</th>
-
-                </tr>
-
-                </thead>
-
-                <tbody>
-
-                @forelse($faculties as $faculty)
-
-                <tr>
-
-                    <td>{{ $faculty->id }}</td>
-
-                    <td>{{ $faculty->faculty_name }}</td>
-
-                    <td>{{ $faculty->employee_id }}</td>
-
-                    <td>{{ $faculty->email }}</td>
-
-                    <td>{{ $faculty->phone }}</td>
-
-                    <td>{{ $faculty->department->department_name }}</td>
-
-                    <td>
-
-                        <a href="{{ route('faculties.edit',$faculty->id) }}" class="btn btn-warning btn-sm">
-                            Edit
-                        </a>
-
-                        <form action="{{ route('faculties.destroy',$faculty->id) }}" method="POST" style="display:inline;">
-
-                            @csrf
-                            @method('DELETE')
-
-                            <button class="btn btn-danger btn-sm"
-                                onclick="return confirm('Delete this Faculty?')">
-                                Delete
-                            </button>
-
-                        </form>
-
-                    </td>
-
-                </tr>
-
-                @empty
-
-                <tr>
-
-                    <td colspan="7" class="text-center">
-                        No Faculty Found
-                    </td>
-
-                </tr>
-
-                @endforelse
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-</div>
-
+    </section>
 @endsection

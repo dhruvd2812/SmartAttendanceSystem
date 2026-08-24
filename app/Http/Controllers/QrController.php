@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\AttendanceSession;
+use App\Models\Faculty;
+use App\Models\StudentClass;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,18 +20,12 @@ class QrController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user || !$user->faculty_id) {
-            return redirect()
-                ->route('login')
-                ->with('error', 'Faculty account not found.');
-        }
-
-        $faculty = $user->faculty;
+        $faculty = $this->facultyFor($user);
 
         if (!$faculty) {
             return redirect()
-                ->route('login')
-                ->with('error', 'Faculty profile not found.');
+                ->route('faculty.dashboard')
+                ->with('error', 'Your faculty profile is not linked to this account. Please contact an administrator.');
         }
 
         $subjects = Subject::where('faculty_id', $faculty->id)
@@ -51,18 +47,12 @@ class QrController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user || !$user->faculty_id) {
-            return redirect()
-                ->route('login')
-                ->with('error', 'Faculty account not found.');
-        }
-
-        $faculty = $user->faculty;
+        $faculty = $this->facultyFor($user);
 
         if (!$faculty) {
             return redirect()
-                ->route('login')
-                ->with('error', 'Faculty profile not found.');
+                ->route('faculty.dashboard')
+                ->with('error', 'Your faculty profile is not linked to this account. Please contact an administrator.');
         }
 
         $validated = $request->validate([
@@ -205,6 +195,29 @@ class QrController extends Controller
 
             'qrData' => $qrData,
         ]);
+    }
+
+    /**
+     * Resolve the logged-in faculty. The email fallback repairs legacy faculty
+     * accounts that were created before the users.faculty_id link existed.
+     */
+    private function facultyFor($user): ?Faculty
+    {
+        if (!$user) {
+            return null;
+        }
+
+        if ($user->faculty_id && $user->faculty) {
+            return $user->faculty;
+        }
+
+        $faculty = Faculty::where('email', $user->email)->first();
+
+        if ($faculty) {
+            $user->forceFill(['faculty_id' => $faculty->id])->save();
+        }
+
+        return $faculty;
     }
 
 
@@ -392,6 +405,22 @@ class QrController extends Controller
                 'message' => 'You are not eligible for this semester.',
             ], 422);
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Keep the class roster in sync with valid QR attendance
+        |--------------------------------------------------------------------------
+        */
+
+        StudentClass::firstOrCreate(
+            [
+                'student_id' => $student->id,
+                'subject_id' => $session->subject_id,
+            ],
+            [
+                'semester' => $student->semester,
+            ]
+        );
 
         /*
         |--------------------------------------------------------------------------
