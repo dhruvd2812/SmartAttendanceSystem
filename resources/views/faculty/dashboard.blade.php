@@ -6,6 +6,13 @@
 
 <div class="container-fluid py-3">
 
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     {{-- ========================================================= --}}
     {{-- HERO BANNER --}}
     {{-- ========================================================= --}}
@@ -134,7 +141,7 @@
                         </div>
 
                         <div class="col-sm-6 col-lg-4">
-                            <a href="{{ route('faculty.students.index') }}" class="p-3 border rounded-4 d-flex align-items-center gap-3 text-decoration-none text-dark bg-light hover-lift h-100">
+                            <a href="{{ route('faculty.attendance.index') }}" class="p-3 border rounded-4 d-flex align-items-center gap-3 text-decoration-none text-dark bg-light hover-lift h-100">
                                 <div class="rounded-3 bg-success text-white p-3 fs-4 d-flex align-items-center justify-content-center">
                                     <i class="bi bi-people-fill"></i>
                                 </div>
@@ -218,4 +225,3 @@
 </style>
 
 @endsection
-
