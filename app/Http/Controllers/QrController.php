@@ -22,21 +22,28 @@ class QrController extends Controller
 
         $faculty = $this->facultyFor($user);
 
-        if (!$faculty) {
+        if ($user->role === 'faculty' && !$faculty) {
             return redirect()
                 ->route('faculty.dashboard')
                 ->with('error', 'Your faculty profile is not linked to this account. Please contact an administrator.');
         }
 
-        $subjects = Subject::where('faculty_id', $faculty->id)
-            ->orderBy('semester')
-            ->orderBy('name')
-            ->get();
+        $faculties = $user->role === 'admin'
+            ? Faculty::orderBy('faculty_name')->get()
+            : collect();
 
-        return view('qr.index', compact(
-            'faculty',
-            'subjects'
-        ));
+        if ($user->role === 'admin' && !$faculty) {
+            $faculty = $faculties->first();
+        }
+
+        $subjects = $faculty
+            ? Subject::where('faculty_id', $faculty->id)
+                ->orderBy('semester')
+                ->orderBy('name')
+                ->get()
+            : collect();
+
+        return view('qr.index', compact('faculty', 'faculties', 'subjects'));
     }
 
 
@@ -47,15 +54,24 @@ class QrController extends Controller
     {
         $user = Auth::user();
 
-        $faculty = $this->facultyFor($user);
+        $faculty = $user->role === 'admin'
+            ? Faculty::find($request->input('faculty_id'))
+            : $this->facultyFor($user);
 
         if (!$faculty) {
             return redirect()
-                ->route('faculty.dashboard')
-                ->with('error', 'Your faculty profile is not linked to this account. Please contact an administrator.');
+                ->route($user->role === 'admin' ? 'admin.qr.index' : 'faculty.dashboard')
+                ->with('error', $user->role === 'admin'
+                    ? 'Please select a valid faculty.'
+                    : 'Your faculty profile is not linked to this account. Please contact an administrator.');
         }
 
         $validated = $request->validate([
+            'faculty_id' => [
+                $user->role === 'admin' ? 'required' : 'nullable',
+                'integer',
+                'exists:faculties,id',
+            ],
             'subject_id' => [
                 'required',
                 'integer',
@@ -178,6 +194,9 @@ class QrController extends Controller
 
         return view('qr.index', [
             'faculty' => $faculty,
+            'faculties' => $user->role === 'admin'
+                ? Faculty::orderBy('faculty_name')->get()
+                : collect(),
 
             'subjects' => Subject::where(
                 'faculty_id',

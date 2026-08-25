@@ -39,6 +39,7 @@ class RoleAccessControlTest extends TestCase
         $this->get(route('admin.students.index'))->assertOk();
         $this->get(route('departments.index'))->assertOk();
         $this->get(route('faculties.index'))->assertOk();
+        $this->get(route('admin.qr.index'))->assertOk();
 
         $this->get(route('faculty.dashboard'))->assertForbidden();
         $this->get(route('student.dashboard'))->assertForbidden();

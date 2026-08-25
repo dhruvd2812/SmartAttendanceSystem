@@ -80,8 +80,24 @@
                         </div>
                     </div>
 
-                    <form action="{{ route('faculty.qr.generate') }}" method="POST">
+                    <form action="{{ auth()->user()->role === 'admin' ? route('admin.qr.generate') : route('faculty.qr.generate') }}" method="POST">
                         @csrf
+
+                        @if(auth()->user()->role === 'admin')
+                            <div class="mb-3">
+                                <label for="faculty_id" class="form-label fw-semibold text-dark">
+                                    Faculty <span class="text-danger">*</span>
+                                </label>
+                                <select name="faculty_id" id="faculty_id" class="form-select" required>
+                                    <option value="">Select Faculty</option>
+                                    @foreach($faculties as $item)
+                                        <option value="{{ $item->id }}" {{ old('faculty_id', $faculty->id ?? '') == $item->id ? 'selected' : '' }}>
+                                            {{ $item->faculty_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
 
                         {{-- Subject Selection --}}
                         <div class="mb-3">
