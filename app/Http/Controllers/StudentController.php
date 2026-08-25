@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class StudentController extends Controller
 {
@@ -107,7 +108,7 @@ class StudentController extends Controller
 
         if ($user->role === 'admin') {
 
-            $departments = Department::orderBy('name')->get();
+            $departments = Department::orderBy('department_name')->get();
         }
 
         elseif ($user->role === 'faculty') {
@@ -167,7 +168,20 @@ class StudentController extends Controller
 
         $validated = $request->validate([
 
-            'name' => [
+            'enrollment_no' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:students,enrollment_no',
+            ],
+
+            'first_name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'last_name' => [
                 'required',
                 'string',
                 'max:255',
@@ -181,7 +195,7 @@ class StudentController extends Controller
                 'unique:users,email',
             ],
 
-            'phone' => [
+            'mobile' => [
                 'nullable',
                 'string',
                 'max:20',
@@ -193,7 +207,7 @@ class StudentController extends Controller
                 'max:20',
             ],
 
-            'date_of_birth' => [
+            'dob' => [
                 'nullable',
                 'date',
             ],
@@ -202,6 +216,13 @@ class StudentController extends Controller
                 'required',
                 'exists:departments,id',
             ],
+
+            'semester' => ['required', 'integer', 'between:1,8'],
+            'academic_year' => ['nullable', 'string', 'max:50'],
+            'address' => ['nullable', 'string'],
+            'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'status' => ['required', 'in:active,inactive'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
 
@@ -240,7 +261,16 @@ class StudentController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        DB::transaction(function () use ($validated) {
+        $photoName = null;
+
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $photoName = time() . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
+            File::ensureDirectoryExists(public_path('uploads/students'));
+            $photo->move(public_path('uploads/students'), $photoName);
+        }
+
+        DB::transaction(function () use ($validated, $photoName) {
 
             /*
             |--------------------------------------------------------------------------
@@ -250,21 +280,19 @@ class StudentController extends Controller
 
             $student = Student::create([
 
-                'name' => $validated['name'],
-
+                'enrollment_no' => $validated['enrollment_no'],
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
                 'email' => $validated['email'],
-
-                'phone' =>
-                    $validated['phone'] ?? null,
-
-                'gender' =>
-                    $validated['gender'] ?? null,
-
-                'date_of_birth' =>
-                    $validated['date_of_birth'] ?? null,
-
-                'department_id' =>
-                    $validated['department_id'],
+                'gender' => $validated['gender'],
+                'dob' => $validated['dob'] ?? null,
+                'mobile' => $validated['mobile'] ?? null,
+                'address' => $validated['address'] ?? null,
+                'department_id' => $validated['department_id'],
+                'semester' => $validated['semester'],
+                'academic_year' => $validated['academic_year'] ?? null,
+                'photo' => $photoName,
+                'status' => $validated['status'],
             ]);
 
 
@@ -276,7 +304,7 @@ class StudentController extends Controller
 
             User::create([
 
-                'name' => $student->name,
+                'name' => $student->full_name,
 
                 'email' => $student->email,
 
@@ -285,8 +313,7 @@ class StudentController extends Controller
                 | You can change this later.
                 */
 
-                'password' =>
-                    Hash::make('12345678'),
+                'password' => Hash::make($validated['password']),
 
                 'student_id' =>
                     $student->id,
@@ -367,7 +394,7 @@ class StudentController extends Controller
         if ($user->role === 'admin') {
 
             $departments =
-                Department::orderBy('name')->get();
+                Department::orderBy('department_name')->get();
         }
 
         elseif ($user->role === 'faculty') {
@@ -430,7 +457,20 @@ class StudentController extends Controller
 
         $validated = $request->validate([
 
-            'name' => [
+            'enrollment_no' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:students,enrollment_no,' . $student->id,
+            ],
+
+            'first_name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'last_name' => [
                 'required',
                 'string',
                 'max:255',
@@ -445,7 +485,7 @@ class StudentController extends Controller
                     optional($student->user)->id,
             ],
 
-            'phone' => [
+            'mobile' => [
                 'nullable',
                 'string',
                 'max:20',
@@ -457,7 +497,7 @@ class StudentController extends Controller
                 'max:20',
             ],
 
-            'date_of_birth' => [
+            'dob' => [
                 'nullable',
                 'date',
             ],
@@ -466,6 +506,12 @@ class StudentController extends Controller
                 'required',
                 'exists:departments,id',
             ],
+
+            'semester' => ['required', 'integer', 'between:1,8'],
+            'academic_year' => ['nullable', 'string', 'max:50'],
+            'address' => ['nullable', 'string'],
+            'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'status' => ['required', 'in:active,inactive'],
         ]);
 
 
@@ -496,9 +542,19 @@ class StudentController extends Controller
         |--------------------------------------------------------------------------
         */
 
+        $photoName = $student->photo;
+
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $photoName = time() . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
+            File::ensureDirectoryExists(public_path('uploads/students'));
+            $photo->move(public_path('uploads/students'), $photoName);
+        }
+
         DB::transaction(function () use (
             $validated,
-            $student
+            $student,
+            $photoName
         ) {
 
             /*
@@ -509,23 +565,19 @@ class StudentController extends Controller
 
             $student->update([
 
-                'name' =>
-                    $validated['name'],
-
-                'email' =>
-                    $validated['email'],
-
-                'phone' =>
-                    $validated['phone'] ?? null,
-
-                'gender' =>
-                    $validated['gender'] ?? null,
-
-                'date_of_birth' =>
-                    $validated['date_of_birth'] ?? null,
-
-                'department_id' =>
-                    $validated['department_id'],
+                'enrollment_no' => $validated['enrollment_no'],
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
+                'email' => $validated['email'],
+                'gender' => $validated['gender'],
+                'dob' => $validated['dob'] ?? null,
+                'mobile' => $validated['mobile'] ?? null,
+                'address' => $validated['address'] ?? null,
+                'department_id' => $validated['department_id'],
+                'semester' => $validated['semester'],
+                'academic_year' => $validated['academic_year'] ?? null,
+                'photo' => $photoName,
+                'status' => $validated['status'],
             ]);
 
 
@@ -539,8 +591,7 @@ class StudentController extends Controller
 
                 $student->user->update([
 
-                    'name' =>
-                        $student->name,
+                    'name' => $student->full_name,
 
                     'email' =>
                         $student->email,

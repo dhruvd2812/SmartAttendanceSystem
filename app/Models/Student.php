@@ -21,8 +21,13 @@ class Student extends Model
         'last_name',
         'email',
         'gender',
+        'dob',
+        'mobile',
+        'address',
         'department_id',
         'semester',
+        'academic_year',
+        'photo',
         'status',
     ];
 
