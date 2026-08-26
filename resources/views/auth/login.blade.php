@@ -67,7 +67,7 @@
                         Account Sign In
                     </h3>
                     <p class="text-muted small mb-0">
-                        Enter your university email and password to access your dashboard.
+                        Enter your email and password to access your dashboard.
                     </p>
                 </div>
 
@@ -180,19 +180,12 @@
 
                 {{-- Registration Divider & Links --}}
                 <div class="mt-4 pt-3 border-top text-center">
-                    <p class="text-muted small mb-3">
-                        Need an account? Choose your registration portal:
-                    </p>
+                    <p class="text-muted small mb-3">Need a student account?</p>
 
                     <div class="row g-2">
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <a href="{{ route('register') }}" class="btn btn-outline-primary btn-sm w-100 py-2 fw-semibold">
                                 <i class="bi bi-mortarboard me-1"></i> Register Student
-                            </a>
-                        </div>
-                        <div class="col-sm-6">
-                            <a href="{{ route('faculty.register') }}" class="btn btn-outline-success btn-sm w-100 py-2 fw-semibold">
-                                <i class="bi bi-person-badge me-1"></i> Register Faculty
                             </a>
                         </div>
                     </div>

@@ -67,23 +67,6 @@ Route::post('/register', [
 
 /*
 |--------------------------------------------------------------------------
-| FACULTY REGISTRATION
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/faculty/register', [
-    AuthController::class,
-    'showFacultyRegister'
-])->name('faculty.register');
-
-Route::post('/faculty/register', [
-    AuthController::class,
-    'facultyRegister'
-])->name('faculty.register.store');
-
-
-/*
-|--------------------------------------------------------------------------
 | LOGOUT
 |--------------------------------------------------------------------------
 */
@@ -265,6 +248,16 @@ Route::middleware([
         FacultyDashboardController::class,
         'index'
     ])->name('faculty.dashboard');
+
+    Route::get('/faculty/profile', [
+        FacultyDashboardController::class,
+        'editProfile'
+    ])->name('faculty.profile.edit');
+
+    Route::put('/faculty/profile', [
+        FacultyDashboardController::class,
+        'updateProfile'
+    ])->name('faculty.profile.update');
 
     Route::get('/faculty/attendance', [
         FacultyAttendanceController::class,

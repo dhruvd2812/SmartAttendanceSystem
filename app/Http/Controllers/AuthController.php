@@ -42,6 +42,7 @@ class AuthController extends Controller
             'email' => [
                 'required',
                 'email',
+                'string',
             ],
 
             'password' => [
@@ -56,10 +57,10 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        if (!Auth::attempt(
-            $credentials,
-            $request->boolean('remember')
-        )) {
+        if (!Auth::attempt([
+            'email' => $credentials['email'],
+            'password' => $credentials['password'],
+        ], $request->boolean('remember'))) {
 
             return back()
                 ->withErrors([
