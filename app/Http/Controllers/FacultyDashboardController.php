@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\AttendanceSession;
 use App\Models\Faculty;
+use App\Models\Department;
 use App\Models\Student;
 use App\Models\Subject;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class FacultyDashboardController extends Controller
 {
@@ -147,6 +151,59 @@ class FacultyDashboardController extends Controller
                 'attendanceSessionCount'
             )
         );
+    }
+
+    /** Show the faculty's account settings. */
+    public function editProfile()
+    {
+        $user = Auth::user();
+
+        return view('faculty.profile', [
+            'user' => $user,
+            'faculty' => $user->faculty,
+            'departments' => Department::orderBy('department_name')->get(),
+        ]);
+    }
+
+    /** Allow a faculty member to complete their own profile and change password. */
+    public function updateProfile(Request $request)
+    {
+        $validated = $request->validate([
+            'faculty_name' => ['required', 'string', 'max:255'],
+            'employee_id' => ['required', 'string', 'max:50', 'unique:faculties,employee_id,' . Auth::user()->faculty_id],
+            'phone' => ['required', 'string', 'max:20'],
+            'department_id' => ['required', 'exists:departments,id'],
+            'current_password' => ['nullable', 'required_with:password', 'current_password'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $user = Auth::user();
+        $faculty = $user->faculty;
+
+        if (!$faculty) {
+            return redirect()->route('faculty.dashboard')
+                ->with('error', 'Your faculty profile could not be found.');
+        }
+
+        DB::transaction(function () use ($validated, $user, $faculty) {
+            $faculty->update([
+                'faculty_name' => $validated['faculty_name'],
+                'employee_id' => $validated['employee_id'],
+                'phone' => $validated['phone'],
+                'department_id' => $validated['department_id'],
+            ]);
+
+            $user->name = $validated['faculty_name'];
+
+            if (!empty($validated['password'])) {
+                $user->password = Hash::make($validated['password']);
+            }
+
+            $user->save();
+        });
+
+        return redirect()->route('faculty.profile.edit')
+            ->with('success', 'Profile updated successfully.');
     }
 
 
