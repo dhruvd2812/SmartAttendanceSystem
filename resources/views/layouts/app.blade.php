@@ -686,7 +686,6 @@
 
                     </li>
 
-
                     {{-- Students --}}
 
                     <li class="nav-item">
@@ -781,6 +780,18 @@
                             href="{{ route('faculty.dashboard') }}"
                         >
                             Dashboard
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link
+                            {{ request()->routeIs('faculty.profile.*') ? 'active' : '' }}"
+                            href="{{ route('faculty.profile.edit') }}"
+                        >
+                            Edit Profile
                         </a>
 
                     </li>
