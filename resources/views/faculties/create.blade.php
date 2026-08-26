@@ -20,41 +20,24 @@
                 </div>
             @endif
 
+            <p class="text-muted">Create a faculty login. The faculty member can change this password later from their profile.</p>
+
             <form action="{{ route('faculties.store') }}" method="POST">
                 @csrf
 
                 <div class="mb-3">
-                    <label class="form-label">Faculty Name</label>
-                    <input type="text" name="faculty_name" class="form-control" value="{{ old('faculty_name') }}">
+                    <label class="form-label">Faculty Email</label>
+                    <input type="email" name="email" class="form-control" value="{{ old('email') }}" required autocomplete="email">
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Employee ID</label>
-                    <input type="text" name="employee_id" class="form-control" value="{{ old('employee_id') }}">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" required autocomplete="new-password">
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" value="{{ old('email') }}">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Phone</label>
-                    <input type="text" name="phone" class="form-control" value="{{ old('phone') }}">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Department</label>
-                    <select name="department_id" class="form-select">
-                        <option value="">Select Department</option>
-
-                        @foreach($departments as $department)
-                            <option value="{{ $department->id }}">
-                                {{ $department->department_name }}
-                            </option>
-                        @endforeach
-
-                    </select>
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" name="password_confirmation" class="form-control" required autocomplete="new-password">
                 </div>
 
                 <button class="btn btn-success">
