@@ -90,6 +90,7 @@ Route::middleware([
     'role:admin'
 ])->group(function () {
 
+
     /*
     |--------------------------------------------------------------------------
     | ADMIN DASHBOARD
@@ -238,6 +239,7 @@ Route::middleware([
     'role:faculty'
 ])->group(function () {
 
+
     /*
     |--------------------------------------------------------------------------
     | FACULTY DASHBOARD
@@ -249,6 +251,13 @@ Route::middleware([
         'index'
     ])->name('faculty.dashboard');
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | FACULTY PROFILE
+    |--------------------------------------------------------------------------
+    */
+
     Route::get('/faculty/profile', [
         FacultyDashboardController::class,
         'editProfile'
@@ -259,15 +268,70 @@ Route::middleware([
         'updateProfile'
     ])->name('faculty.profile.update');
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | FACULTY ATTENDANCE
+    |--------------------------------------------------------------------------
+    */
+
     Route::get('/faculty/attendance', [
         FacultyAttendanceController::class,
         'index'
     ])->name('faculty.attendance.index');
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | FACULTY → MANUAL ATTENDANCE PAGE
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/faculty/attendance/manual', [
+        FacultyAttendanceController::class,
+        'manual'
+    ])->name('faculty.attendance.manual');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FACULTY → LOAD STUDENTS
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/faculty/attendance/students', [
+        FacultyAttendanceController::class,
+        'students'
+    ])->name('faculty.attendance.students');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FACULTY → SAVE MANUAL ATTENDANCE
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post('/faculty/attendance/manual', [
+        FacultyAttendanceController::class,
+        'storeManual'
+    ])->name('faculty.attendance.manual.store');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FACULTY → SUBJECTS
+    |--------------------------------------------------------------------------
+    */
+
     Route::resource(
         '/faculty/subjects',
         SubjectController::class
-    )->except(['show', 'create'])->names('faculty.subjects');
+    )
+        ->except([
+            'show',
+            'create'
+        ])
+        ->names('faculty.subjects');
 
 
     /*
@@ -370,6 +434,7 @@ Route::middleware([
     'role:student'
 ])->group(function () {
 
+
     /*
     |--------------------------------------------------------------------------
     | STUDENT DASHBOARD
@@ -396,7 +461,7 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | STUDENT → MY SUBJECTS
+    | STUDENT → SUBJECTS
     |--------------------------------------------------------------------------
     */
 
@@ -432,7 +497,7 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | STUDENT → MY ATTENDANCE
+    | STUDENT → ATTENDANCE
     |--------------------------------------------------------------------------
     */
 
@@ -456,7 +521,7 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
-    | STUDENT → SCAN QR CODE
+    | STUDENT → SCAN QR
     |--------------------------------------------------------------------------
     */
 
@@ -464,6 +529,7 @@ Route::middleware([
         QrController::class,
         'scan'
     ])->name('student.scan-qr');
+
 
     Route::post('/student/attendance/scan', [
         QrController::class,
@@ -481,6 +547,7 @@ Route::middleware([
         ChatbotController::class,
         'index'
     ])->name('student.chatbot.index');
+
 
     Route::post('/student/chatbot/message', [
         ChatbotController::class,
