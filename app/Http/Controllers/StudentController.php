@@ -19,11 +19,15 @@ class StudentController extends Controller
      * Admin   -> All students
      * Faculty -> Students of their department
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
         $query = Student::with('department')
+            ->when(
+                $request->filled('semester'),
+                fn ($students) => $students->where('semester', $request->integer('semester'))
+            )
             ->latest();
 
         /*
@@ -50,18 +54,7 @@ class StudentController extends Controller
             | belonging to their department.
             */
 
-            if (!$user->faculty || !$user->faculty->department_id) {
-
-                $students = collect();
-            } else {
-
-                $students = $query
-                    ->where(
-                        'department_id',
-                        $user->faculty->department_id
-                    )
-                    ->get();
-            }
+            $students = $query->get();
         }
 
         /*
@@ -76,9 +69,14 @@ class StudentController extends Controller
         }
 
 
+        $semesterCounts = Student::selectRaw('semester, count(*) as total')
+            ->whereBetween('semester', [1, 8])
+            ->groupBy('semester')
+            ->pluck('total', 'semester');
+
         return view(
             'students.index',
-            compact('students')
+            compact('students', 'semesterCounts')
         );
     }
 
@@ -361,7 +359,11 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        $this->authorizeStudentAccess($student);
+        /* Faculty may view the institute-wide student register, but changes
+         * remain restricted to students in the faculty's own department. */
+        if (Auth::user()->role !== 'faculty') {
+            $this->authorizeStudentAccess($student);
+        }
 
         $student->load('department');
 

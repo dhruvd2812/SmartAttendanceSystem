@@ -67,6 +67,36 @@ class FacultyAttendanceController extends Controller
         );
     }
 
+    /** Display the semester-wise attendance muster for this faculty. */
+    public function muster(Request $request)
+    {
+        $faculty = Auth::user()?->faculty;
+
+        if (!$faculty) {
+            return redirect()->route('faculty.dashboard')
+                ->with('error', 'Your faculty profile is not linked to this account.');
+        }
+
+        $sessionForFaculty = fn ($query) => $query->where('faculty_id', $faculty->id);
+
+        $students = Student::with('department')
+            ->when($request->filled('semester'), fn ($query) => $query->where('semester', $request->integer('semester')))
+            ->withCount([
+                'attendances as total_lectures' => fn ($query) => $query->whereHas('attendanceSession', $sessionForFaculty),
+                'attendances as present_lectures' => fn ($query) => $query->whereIn('status', ['present', 'late'])->whereHas('attendanceSession', $sessionForFaculty),
+                'attendances as absent_lectures' => fn ($query) => $query->where('status', 'absent')->whereHas('attendanceSession', $sessionForFaculty),
+            ])
+            ->orderBy('semester')->orderBy('first_name')->orderBy('last_name')
+            ->get();
+
+        $semesterCounts = Student::selectRaw('semester, count(*) as total')
+            ->whereBetween('semester', [1, 8])
+            ->groupBy('semester')
+            ->pluck('total', 'semester');
+
+        return view('faculty.attendance.muster', compact('students', 'semesterCounts'));
+    }
+
 
     /**
      * Show manual attendance form.
