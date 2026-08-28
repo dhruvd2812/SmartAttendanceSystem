@@ -823,6 +823,18 @@
 
                     </li>
 
+                    <li class="nav-item">
+
+                        <a
+                            class="nav-link
+                            {{ request()->routeIs('faculty.muster') ? 'active' : '' }}"
+                            href="{{ route('faculty.muster') }}"
+                        >
+                            Muster
+                        </a>
+
+                    </li>
+
 
                     {{-- QR Generator --}}
 

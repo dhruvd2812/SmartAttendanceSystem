@@ -280,6 +280,11 @@ Route::middleware([
         'index'
     ])->name('faculty.attendance.index');
 
+    Route::get('/faculty/muster', [
+        FacultyAttendanceController::class,
+        'muster'
+    ])->name('faculty.muster');
+
 
     /*
     |--------------------------------------------------------------------------
