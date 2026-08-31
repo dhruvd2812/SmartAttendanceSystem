@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PersonName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -48,6 +49,38 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Display Name
+    |--------------------------------------------------------------------------
+    |
+    | Some accounts store an email address in the `name` column, so never echo
+    | it raw. See App\Support\PersonName for the formatting rules.
+    |
+    */
+
+    public function getDisplayNameAttribute(): string
+    {
+        $name = PersonName::human($this->attributes['name'] ?? null, '');
+
+        if ($name !== '') {
+            return $name;
+        }
+
+        return PersonName::human($this->attributes['email'] ?? null, 'User');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Initial (for avatar bubbles)
+    |--------------------------------------------------------------------------
+    */
+
+    public function getInitialAttribute(): string
+    {
+        return mb_strtoupper(mb_substr($this->display_name, 0, 1));
     }
 
     /*

@@ -31,7 +31,7 @@ class NoticeController extends Controller
         Notice::create([
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'posted_by' => $user->name ?? $user->email,
+            'posted_by' => $user->display_name,
             'role' => $user->role ?? null,
             'is_active' => true,
         ]);

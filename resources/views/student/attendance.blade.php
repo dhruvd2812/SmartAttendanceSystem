@@ -430,7 +430,7 @@
                                     </td>
 
                                     <td>
-                                        {{ $attendance->attendanceSession?->faculty?->faculty_name ?? '-' }}
+                                        {{ $attendance->attendanceSession?->faculty?->display_name ?? '-' }}
                                     </td>
 
                                     <td>

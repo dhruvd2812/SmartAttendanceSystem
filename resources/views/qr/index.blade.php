@@ -77,7 +77,7 @@
                         </div>
                         <div>
                             <small class="text-muted d-block">Conducting Faculty</small>
-                            <span class="fw-bold text-dark">{{ $faculty->faculty_name ?? $faculty->name ?? 'Faculty Member' }}</span>
+                            <span class="fw-bold text-dark">{{ $faculty->display_name ?? 'Faculty Member' }}</span>
                         </div>
                     </div>
 

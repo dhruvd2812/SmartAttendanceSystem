@@ -16,7 +16,7 @@
                 <span class="text-white-50 small">• System Command Center</span>
             </div>
             <h1 class="display-6 fw-bold mb-2 text-white">
-                Welcome back, {{ auth()->user()->name }} 👋
+                Welcome back, {{ auth()->user()->display_name }} 👋
             </h1>
             <p class="mb-0 text-white-50" style="max-width: 600px;">
                 Manage university students, faculty members, academic departments, and live QR attendance sessions with AI insights.

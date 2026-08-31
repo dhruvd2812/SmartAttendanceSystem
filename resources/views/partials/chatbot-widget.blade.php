@@ -48,7 +48,7 @@
             aria-live="polite"
         >
             <div class="attendance-chatbot__message attendance-chatbot__message--bot">
-                👋 Hello <strong>{{ auth()->user()->name ?? 'there' }}</strong>! I am your <strong>Smart Attendance Assistant</strong>.<br><br>
+                👋 Hello <strong>{{ auth()->user()->display_name ?? 'there' }}</strong>! I am your <strong>Smart Attendance Assistant</strong>.<br><br>
                 How can I assist you today? You can tap any suggested topic below or type your question.
             </div>
 

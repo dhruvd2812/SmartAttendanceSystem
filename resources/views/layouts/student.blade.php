@@ -538,11 +538,11 @@
 
                     <div class="student-user-badge">
                         <div class="student-avatar">
-                            {{ strtoupper(substr(auth()->user()->name ?? 'S', 0, 1)) }}
+                            {{ auth()->user()->initial ?? 'S' }}
                         </div>
                         <div class="d-flex flex-column">
                             <span class="fw-bold" style="font-size: 0.88rem; line-height: 1.1;">
-                                {{ auth()->user()->name ?? 'Student' }}
+                                {{ auth()->user()->display_name ?? 'Student' }}
                             </span>
                             <small class="text-muted" style="font-size: 0.72rem;">Student</small>
                         </div>

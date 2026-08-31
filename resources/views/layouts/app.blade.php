@@ -877,7 +877,7 @@
 
                     <span class="text-white me-3">
 
-                        {{ auth()->user()->name }}
+                        {{ auth()->user()->display_name }}
 
                         <small class="opacity-75">
                             ({{ ucfirst(auth()->user()->role) }})

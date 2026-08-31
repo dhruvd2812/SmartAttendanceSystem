@@ -38,7 +38,7 @@ class ChatbotController extends Controller
 
         // 1. Common Greetings & Bot Identity
         if ($this->isGreeting($question)) {
-            $name = $user->name ?? 'there';
+            $name = $user->display_name ?? 'there';
             return $this->reply(
                 "👋 Hello {$name}! I'm your **Smart Attendance AI Assistant**.\n\n" .
                 "I can assist you with:\n" .

@@ -61,7 +61,7 @@
 
                             <small class="text-muted">
                                 <i class="fas fa-user me-1"></i>
-                                {{ $notice->posted_by ?? 'Admin' }}
+                                {{ \App\Support\PersonName::human($notice->posted_by, 'Admin') }}
                                 <br>
 
                                 <i class="fas fa-calendar me-1"></i>

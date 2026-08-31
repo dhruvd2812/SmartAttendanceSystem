@@ -251,7 +251,7 @@
 
                 <div class="fw-semibold">
 
-                    {{ $student->first_name ?? auth()->user()->name }}
+                    {{ $student->first_name ?? auth()->user()->display_name }}
 
                     {{ $student->last_name ?? '' }}
 
@@ -269,7 +269,7 @@
             <div class="student-avatar">
 
                 {{ strtoupper(substr(
-                    $student->first_name ?? auth()->user()->name,
+                    $student->first_name ?? auth()->user()->display_name,
                     0,
                     1
                 )) }}

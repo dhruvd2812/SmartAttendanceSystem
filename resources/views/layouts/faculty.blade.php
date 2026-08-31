@@ -287,11 +287,11 @@
                 </a>
                 <div class="d-flex align-items-center gap-2">
                     <div class="faculty-avatar">
-                        {{ strtoupper(substr(auth()->user()->name ?? 'F', 0, 1)) }}
+                        {{ auth()->user()->initial ?? 'F' }}
                     </div>
                     <div class="d-flex flex-column">
                         <span class="fw-bold" style="font-size:.88rem;line-height:1.1;">
-                            {{ auth()->user()->name ?? 'Faculty' }}
+                            {{ auth()->user()->display_name ?? 'Faculty' }}
                         </span>
                         <small class="text-muted" style="font-size:.72rem;">Faculty</small>
                     </div>

@@ -31,7 +31,7 @@
             </div>
 
             <h1 class="fw-bold mb-2 text-white" style="font-size: clamp(1.6rem, 2.6vw, 2.1rem); letter-spacing: -.02em;">
-                Hello, {{ $user->name ?? 'Faculty Member' }} 👋
+                Hello, {{ $user->display_name ?? 'Faculty Member' }} 👋
             </h1>
 
             <p class="mb-0" style="max-width: 600px; color: rgba(226,232,240,.72);">

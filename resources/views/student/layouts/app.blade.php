@@ -409,7 +409,7 @@
 
                 <div class="student-avatar">
 
-                    {{ strtoupper(substr($student->first_name ?? auth()->user()->name, 0, 1)) }}
+                    {{ strtoupper(substr($student->first_name ?? auth()->user()->display_name, 0, 1)) }}
 
                 </div>
 
@@ -417,7 +417,7 @@
 
                     <div class="student-profile-name">
 
-                        {{ $student->first_name ?? auth()->user()->name }}
+                        {{ $student->first_name ?? auth()->user()->display_name }}
 
                         {{ $student->last_name ?? '' }}
 

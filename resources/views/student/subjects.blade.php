@@ -74,7 +74,7 @@
 
                                 Faculty:
 
-                                {{ $subject->faculty->name ?? 'Not Assigned' }}
+                                {{ $subject->faculty->display_name ?? 'Not Assigned' }}
 
                             </p>
 

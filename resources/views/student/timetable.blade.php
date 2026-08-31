@@ -248,10 +248,7 @@
 
                                         @if($timetable->faculty)
 
-                                            {{ $timetable->faculty->faculty_name
-                                                ?? $timetable->faculty->name
-                                                ?? 'Faculty'
-                                            }}
+                                            {{ $timetable->faculty->display_name ?? 'Faculty' }}
 
                                         @else
 

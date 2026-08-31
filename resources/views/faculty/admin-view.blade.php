@@ -69,7 +69,7 @@
                                     </td>
 
                                     <td>
-                                        {{ $faculty->faculty_name }}
+                                        {{ $faculty->display_name }}
                                     </td>
 
                                     <td>

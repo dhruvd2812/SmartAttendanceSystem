@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PersonName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,6 +23,25 @@ class Faculty extends Model
         'phone',
         'department_id',
     ];
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Display Name
+    |--------------------------------------------------------------------------
+    |
+    | Faculty records created from a login account can end up holding an email
+    | address in `faculty_name`, so never echo it raw.
+    |
+    */
+
+    public function getDisplayNameAttribute(): string
+    {
+        return PersonName::human(
+            $this->attributes['faculty_name'] ?? null,
+            'Faculty Member'
+        );
+    }
 
 
     /*
