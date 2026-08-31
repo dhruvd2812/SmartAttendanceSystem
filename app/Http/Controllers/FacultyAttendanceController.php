@@ -164,22 +164,68 @@ class FacultyAttendanceController extends Controller
         }
 
         /*
-         * Get students through student_classes.
+         * Get students:
+         * 1) Match by semester (e.g. 5th sem) or student_classes mapping
+         * 2) Fallback to department or all active students so faculty is never blocked
          */
-        $students = Student::whereHas('studentClasses', function ($query) use ($subject) {
-            $query->where('subject_id', $subject->id);
-        })
-        ->orderBy('first_name')
-        ->orderBy('last_name')
-        ->get([
-            'id',
-            'enrollment_no',
-            'first_name',
-            'last_name',
-            'email',
-            'semester',
-            'status',
-        ]);
+        $studentsQuery = Student::query();
+
+        $hasClasses = DB::table('student_classes')->where('subject_id', $subject->id)->exists();
+
+        if ($hasClasses) {
+            $studentsQuery->where(function ($q) use ($subject) {
+                $q->whereHas('studentClasses', function ($sq) use ($subject) {
+                    $sq->where('subject_id', $subject->id);
+                });
+                if ($subject->semester) {
+                    $q->orWhere('semester', $subject->semester);
+                }
+            });
+        } elseif ($subject->semester) {
+            $studentsQuery->where('semester', $subject->semester);
+            if ($subject->department_id) {
+                $studentsQuery->where(function ($q) use ($subject) {
+                    $q->where('department_id', $subject->department_id)->orWhereNull('department_id');
+                });
+            }
+        } elseif ($subject->department_id || $faculty->department_id) {
+            $depId = $subject->department_id ?: $faculty->department_id;
+            $studentsQuery->where('department_id', $depId);
+        }
+
+        $students = $studentsQuery
+            ->orderBy('semester')
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get([
+                'id',
+                'enrollment_no',
+                'first_name',
+                'last_name',
+                'email',
+                'semester',
+                'status',
+            ]);
+
+        // Fallback: If no students found by exact match, fetch department students or all students
+        if ($students->isEmpty()) {
+            $students = Student::query()
+                ->when($faculty->department_id, function ($q, $dId) {
+                    $q->where('department_id', $dId);
+                })
+                ->orderBy('semester')
+                ->orderBy('first_name')
+                ->orderBy('last_name')
+                ->get([
+                    'id',
+                    'enrollment_no',
+                    'first_name',
+                    'last_name',
+                    'email',
+                    'semester',
+                    'status',
+                ]);
+        }
 
         return response()->json([
             'students' => $students,
@@ -277,32 +323,22 @@ class FacultyAttendanceController extends Controller
 
 
         /*
-         * Validate that every submitted student
-         * actually belongs to this subject.
+         * Validate that every submitted student exists in the database.
          */
         $studentIds = collect($validated['attendance'])
             ->pluck('student_id')
             ->unique()
             ->values();
 
-        $validStudentIds = Student::whereIn('id', $studentIds)
-            ->whereHas('studentClasses', function ($query) use ($subject) {
-                $query->where('subject_id', $subject->id);
-            })
-            ->pluck('id');
+        $validCount = Student::whereIn('id', $studentIds)->count();
 
-
-        foreach ($studentIds as $studentId) {
-
-            if (!$validStudentIds->contains($studentId)) {
-
-                return back()
-                    ->withInput()
-                    ->with(
-                        'error',
-                        'One or more students are not assigned to this subject.'
-                    );
-            }
+        if ($validCount !== $studentIds->count()) {
+            return back()
+                ->withInput()
+                ->with(
+                    'error',
+                    'One or more invalid students selected.'
+                );
         }
 
 
@@ -370,7 +406,7 @@ class FacultyAttendanceController extends Controller
                 'qr_token' => null,
                 'qr_expires_at' => null,
 
-                'status' => 'completed',
+                'status' => 'closed',
             ]);
 
 
@@ -405,5 +441,98 @@ class FacultyAttendanceController extends Controller
                 'success',
                 'Manual attendance saved successfully.'
             );
+    }
+
+
+    /**
+     * Return sessions on a given date (any faculty in same department)
+     * so faculty can copy attendance from a previous lecture.
+     */
+    public function sessionsOnDate(Request $request)
+    {
+        $faculty = Auth::user()?->faculty;
+
+        if (!$faculty) {
+            return response()->json(['message' => 'Faculty not found.'], 403);
+        }
+
+        $request->validate([
+            'date' => ['required', 'date'],
+        ]);
+
+        // Get all sessions on that date for the same department or faculty
+        $sessionsQuery = AttendanceSession::whereDate('lecture_date', $request->date);
+
+        if ($faculty->department_id) {
+            $sessionsQuery->where(function ($q) use ($faculty) {
+                $q->whereHas('subject', function ($sq) use ($faculty) {
+                    $sq->where('department_id', $faculty->department_id)->orWhereNull('department_id');
+                })->orWhere('faculty_id', $faculty->id);
+            });
+        }
+
+        $sessionsList = $sessionsQuery
+            ->with([
+                'subject:id,name,code,department_id,semester',
+                'faculty:id,faculty_name',
+                'attendances' => function ($q) {
+                    $q->with('student:id,first_name,last_name,enrollment_no');
+                },
+            ])
+            ->orderBy('start_time')
+            ->latest('id')
+            ->get();
+
+        // Fallback: If department query returned empty, get all sessions on that date
+        if ($sessionsList->isEmpty()) {
+            $sessionsList = AttendanceSession::whereDate('lecture_date', $request->date)
+                ->with([
+                    'subject:id,name,code,department_id,semester',
+                    'faculty:id,faculty_name',
+                    'attendances' => function ($q) {
+                        $q->with('student:id,first_name,last_name,enrollment_no');
+                    },
+                ])
+                ->orderBy('start_time')
+                ->latest('id')
+                ->get();
+        }
+
+        $sessions = $sessionsList
+            ->map(function ($session) {
+                $presentCount = $session->attendances->where('status', 'present')->count();
+                $absentCount = $session->attendances->where('status', 'absent')->count();
+                $lateCount = $session->attendances->where('status', 'late')->count();
+                $totalCount = $session->attendances->count();
+
+                return [
+                    'id'            => $session->id,
+                    'subject'       => $session->subject?->name . ($session->subject?->code ? ' (' . $session->subject->code . ')' : ''),
+                    'subject_id'    => $session->subject_id,
+                    'semester'      => $session->subject?->semester,
+                    'faculty'       => $session->faculty?->faculty_name ?? 'Faculty',
+                    'lecture_name'  => $session->lecture_name ?: 'Regular Lecture',
+                    'start_time'    => $session->start_time ? date('h:i A', strtotime($session->start_time)) : null,
+                    'end_time'      => $session->end_time ? date('h:i A', strtotime($session->end_time)) : null,
+                    'raw_start'     => $session->start_time,
+                    'raw_end'       => $session->end_time,
+                    'status'        => $session->status,
+                    'present_count' => $presentCount,
+                    'absent_count'  => $absentCount,
+                    'late_count'    => $lateCount,
+                    'total_count'   => $totalCount,
+                    'students'      => $session->attendances->map(function ($att) {
+                        return [
+                            'student_id'    => $att->student_id,
+                            'name'          => trim(($att->student?->first_name ?? '') . ' ' . ($att->student?->last_name ?? '')),
+                            'enrollment_no' => $att->student?->enrollment_no,
+                            'status'        => $att->status,
+                            'remarks'       => $att->remarks,
+                        ];
+                    })->values(),
+                ];
+            });
+
+        return response()->json(['sessions' => $sessions]);
     }
 }

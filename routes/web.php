@@ -324,6 +324,18 @@ Route::middleware([
 
     /*
     |--------------------------------------------------------------------------
+    | FACULTY → SESSIONS ON DATE (for copy feature)
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/faculty/attendance/sessions-on-date', [
+        FacultyAttendanceController::class,
+        'sessionsOnDate'
+    ])->name('faculty.attendance.sessions-on-date');
+
+
+    /*
+    |--------------------------------------------------------------------------
     | FACULTY → SUBJECTS
     |--------------------------------------------------------------------------
     */
