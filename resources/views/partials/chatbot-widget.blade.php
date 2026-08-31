@@ -118,6 +118,77 @@
 </div>
 
 <style>
+    .attendance-chatbot {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 99999;
+        font-family: inherit;
+    }
+
+    .attendance-chatbot__toggle {
+        position: relative;
+        width: 56px;
+        height: 56px;
+        border: 0;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4f46e5, #3b82f6);
+        color: #ffffff;
+        font-size: 1.45rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+        cursor: pointer;
+        transition: all 0.25s ease;
+    }
+
+    .attendance-chatbot__toggle:hover {
+        transform: scale(1.06) translateY(-2px);
+        box-shadow: 0 14px 30px rgba(79, 70, 229, 0.5);
+    }
+
+    .attendance-chatbot__panel {
+        position: fixed;
+        right: 24px;
+        bottom: 92px;
+        width: 380px;
+        max-width: calc(100vw - 32px);
+        height: 530px;
+        max-height: calc(100vh - 115px);
+        display: flex;
+        flex-direction: column;
+        background: #ffffff;
+        border-radius: 18px;
+        box-shadow: 0 20px 60px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(15, 23, 42, 0.08);
+        overflow: hidden;
+        z-index: 99999;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(16px) scale(0.95);
+        transform-origin: bottom right;
+        transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+
+    .attendance-chatbot.is-open .attendance-chatbot__panel {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+    }
+
+    @media (max-width: 480px) {
+        .attendance-chatbot {
+            right: 16px;
+            bottom: 16px;
+        }
+        .attendance-chatbot__panel {
+            right: 16px;
+            bottom: 80px;
+            width: calc(100vw - 32px);
+            height: calc(100vh - 100px);
+        }
+    }
+
     .attendance-chatbot__header {
         display: flex;
         align-items: center;
@@ -126,6 +197,7 @@
         background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);
         color: #ffffff;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        flex-shrink: 0;
     }
 
     .chatbot-header-avatar {
