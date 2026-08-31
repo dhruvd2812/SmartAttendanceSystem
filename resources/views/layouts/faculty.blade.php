@@ -111,6 +111,69 @@
             background: rgba(15,23,42,.6); backdrop-filter: blur(4px); z-index: 1030;
         }
 
+        /* =========================================================
+           SHARED UI SYSTEM (hero / cards / metrics / tables)
+        ========================================================== */
+        .app-hero {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            color: #fff;
+            background: linear-gradient(120deg, #0f172a 0%, #1e1b4b 45%, #312e81 100%);
+            border: 1px solid rgba(255,255,255,.08);
+            box-shadow: 0 18px 38px -14px rgba(30,27,75,.55);
+        }
+        .app-hero::before {
+            content: '';
+            position: absolute; top: -55%; right: -8%;
+            width: 340px; height: 340px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(99,102,241,.38) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .app-hero > * { position: relative; z-index: 1; }
+
+        .app-card {
+            background: #fff;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 16px;
+            box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 8px 24px -16px rgba(15,23,42,.14);
+            transition: box-shadow .25s ease, transform .25s ease;
+        }
+        .app-card:hover { box-shadow: 0 4px 10px rgba(15,23,42,.05), 0 18px 34px -18px rgba(15,23,42,.22); }
+        .app-card .card-header { border-radius: 16px 16px 0 0; border-color: var(--border-color) !important; }
+
+        .metric-icon-wrapper {
+            width: 52px; height: 52px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.35rem; flex-shrink: 0;
+        }
+        .metric-icon-indigo  { background: rgba(79,70,229,.10);  color: #4f46e5; }
+        .metric-icon-cyan    { background: rgba(8,145,178,.10);  color: #0e7490; }
+        .metric-icon-emerald { background: rgba(5,150,105,.10);  color: #047857; }
+        .metric-icon-amber   { background: rgba(217,119,6,.10);  color: #b45309; }
+
+        /* soft tinted tiles used by quick actions */
+        .action-tile-icon {
+            width: 46px; height: 46px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.15rem; flex-shrink: 0;
+        }
+        .tile-indigo  { background: rgba(79,70,229,.10);  color: #4f46e5; }
+        .tile-emerald { background: rgba(5,150,105,.10);  color: #047857; }
+        .tile-cyan    { background: rgba(8,145,178,.10);  color: #0e7490; }
+        .tile-violet  { background: rgba(124,58,237,.10); color: #6d28d9; }
+
+        .table thead th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: .74rem;
+            font-weight: 700;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .table tbody td { border-color: #f1f5f9; }
+
         @media (max-width: 992px) {
             .faculty-sidebar { transform: translateX(-100%); }
             .faculty-sidebar.show { transform: translateX(0); }

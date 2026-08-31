@@ -5,37 +5,9 @@
 
 @section('content')
 
-<div class="container-fluid py-3">
+<div class="container-fluid p-0">
 
-    {{-- ========================================================= --}}
-    {{-- SUCCESS / ERROR MESSAGES --}}
-    {{-- ========================================================= --}}
-
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle me-2"></i>
-            {{ session('success') }}
-
-            <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert"
-                    aria-label="Close">
-            </button>
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            {{ session('error') }}
-
-            <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert"
-                    aria-label="Close">
-            </button>
-        </div>
-    @endif
+    {{-- Flash messages are rendered by layouts.faculty --}}
 
 
     {{-- ========================================================= --}}
@@ -48,21 +20,21 @@
 
             <div class="d-flex align-items-center gap-2 mb-2">
 
-                <span class="badge bg-white text-primary fw-bold px-3 py-1">
+                <span class="badge hero-badge fw-semibold px-3 py-2">
                     Faculty Portal
                 </span>
 
-                <span class="text-white-50 small">
+                <span class="small" style="color:rgba(226,232,240,.65);">
                     • Instructor Dashboard
                 </span>
 
             </div>
 
-            <h1 class="display-6 fw-bold mb-2 text-white">
+            <h1 class="fw-bold mb-2 text-white" style="font-size: clamp(1.6rem, 2.6vw, 2.1rem); letter-spacing: -.02em;">
                 Hello, {{ $user->name ?? 'Faculty Member' }} 👋
             </h1>
 
-            <p class="mb-0 text-white-50" style="max-width: 600px;">
+            <p class="mb-0" style="max-width: 600px; color: rgba(226,232,240,.72);">
                 Manage your class subjects, launch live QR attendance sessions,
                 manually mark attendance, track lecture hours, and consult
                 the AI assistant.
@@ -78,7 +50,8 @@
             {{-- QR SESSION --}}
 
             <a href="{{ route('faculty.qr.index') }}"
-               class="btn btn-light text-primary fw-bold px-4 py-3 d-inline-flex align-items-center gap-2 shadow-sm rounded-3">
+               class="btn btn-light fw-semibold px-4 py-3 d-inline-flex align-items-center gap-2 rounded-3"
+               style="color:#312e81;">
 
                 <i class="bi bi-qr-code-scan fs-5"></i>
 
@@ -92,7 +65,7 @@
             {{-- MANUAL ATTENDANCE --}}
 
             <a href="{{ route('faculty.attendance.manual') }}"
-               class="btn btn-success fw-bold px-4 py-3 d-inline-flex align-items-center gap-2 shadow-sm rounded-3">
+               class="btn hero-btn-glass fw-semibold px-4 py-3 d-inline-flex align-items-center gap-2 rounded-3">
 
                 <i class="bi bi-pencil-square fs-5"></i>
 
@@ -106,7 +79,7 @@
             {{-- CLASS ROSTER --}}
 
             <a href="{{ route('faculty.students.index') }}"
-               class="btn btn-outline-light fw-semibold px-4 py-3 d-inline-flex align-items-center gap-2 rounded-3">
+               class="btn hero-btn-glass fw-semibold px-4 py-3 d-inline-flex align-items-center gap-2 rounded-3">
 
                 <i class="bi bi-people"></i>
 
@@ -146,7 +119,7 @@
                             {{ $subjectCount }}
                         </h3>
 
-                        <small class="text-primary fw-medium">
+                        <small class="text-muted">
                             Teaching Courses
                         </small>
 
@@ -257,7 +230,7 @@
                             {{ $attendanceSessionCount }}
                         </h3>
 
-                        <small class="text-success fw-semibold">
+                        <small class="fw-semibold" style="color:#047857;">
 
                             <i class="bi bi-check2-all me-1"></i>
 
@@ -267,8 +240,7 @@
 
                     </div>
 
-                    <div class="metric-icon-wrapper metric-icon-amber"
-                         style="background: rgba(245, 158, 11, 0.12); color: #d97706;">
+                    <div class="metric-icon-wrapper metric-icon-amber">
 
                         <i class="bi bi-broadcast"></i>
 
@@ -331,9 +303,9 @@
                         <div class="col-sm-6 col-lg-3">
 
                             <a href="{{ route('faculty.qr.index') }}"
-                               class="p-3 border rounded-4 d-flex align-items-center gap-3 text-decoration-none text-dark bg-light hover-lift h-100">
+                               class="p-3 border rounded-4 d-flex align-items-center gap-3 text-decoration-none text-dark bg-white hover-lift h-100">
 
-                                <div class="rounded-3 bg-primary text-white p-3 fs-4 d-flex align-items-center justify-content-center">
+                                <div class="action-tile-icon tile-indigo">
 
                                     <i class="bi bi-qr-code-scan"></i>
 
@@ -363,9 +335,9 @@
                         <div class="col-sm-6 col-lg-3">
 
                             <a href="{{ route('faculty.attendance.manual') }}"
-                               class="p-3 border rounded-4 d-flex align-items-center gap-3 text-decoration-none text-dark bg-light hover-lift h-100">
+                               class="p-3 border rounded-4 d-flex align-items-center gap-3 text-decoration-none text-dark bg-white hover-lift h-100">
 
-                                <div class="rounded-3 bg-success text-white p-3 fs-4 d-flex align-items-center justify-content-center">
+                                <div class="action-tile-icon tile-emerald">
 
                                     <i class="bi bi-pencil-square"></i>
 
@@ -395,9 +367,9 @@
                         <div class="col-sm-6 col-lg-3">
 
                             <a href="{{ route('faculty.attendance.index') }}"
-                               class="p-3 border rounded-4 d-flex align-items-center gap-3 text-decoration-none text-dark bg-light hover-lift h-100">
+                               class="p-3 border rounded-4 d-flex align-items-center gap-3 text-decoration-none text-dark bg-white hover-lift h-100">
 
-                                <div class="rounded-3 bg-info text-white p-3 fs-4 d-flex align-items-center justify-content-center">
+                                <div class="action-tile-icon tile-cyan">
 
                                     <i class="bi bi-people-fill"></i>
 
@@ -428,11 +400,10 @@
 
                             <div role="button"
                                  onclick="document.querySelector('[data-chat-toggle]')?.click()"
-                                 class="p-3 border rounded-4 d-flex align-items-center gap-3 text-decoration-none text-dark bg-light hover-lift h-100"
+                                 class="p-3 border rounded-4 d-flex align-items-center gap-3 text-decoration-none text-dark bg-white hover-lift h-100"
                                  style="cursor: pointer;">
 
-                                <div class="rounded-3 bg-indigo text-white p-3 fs-4 d-flex align-items-center justify-content-center"
-                                     style="background: #4f46e5;">
+                                <div class="action-tile-icon tile-violet">
 
                                     <i class="bi bi-robot"></i>
 
@@ -482,7 +453,8 @@
 
             </h5>
 
-            <span class="badge bg-primary-subtle text-primary">
+            <span class="badge rounded-pill fw-semibold px-3 py-2"
+                  style="background: rgba(79,70,229,.10); color:#4f46e5;">
 
                 {{ $subjectCount }} subjects
 
@@ -539,7 +511,8 @@
 
                                     <td>
 
-                                        <span class="badge bg-light text-dark border">
+                                        <span class="badge rounded-pill fw-semibold"
+                                              style="background:#f1f5f9; color:#334155; border:1px solid #e2e8f0;">
 
                                             {{ $subject->code ?? '-' }}
 
@@ -550,7 +523,8 @@
 
                                     <td>
 
-                                        <span class="badge bg-secondary-subtle text-secondary">
+                                        <span class="badge rounded-pill fw-semibold"
+                                              style="background: rgba(8,145,178,.10); color:#0e7490;">
 
                                             Semester {{ $subject->semester ?? '-' }}
 
@@ -559,7 +533,7 @@
                                     </td>
 
 
-                                    <td class="pe-4 fw-semibold text-primary">
+                                    <td class="pe-4 fw-semibold" style="color:#4f46e5;">
 
                                         <i class="bi bi-people me-1"></i>
 
@@ -604,33 +578,56 @@
 
 <style>
 
-    .hover-lift {
+    /* ---- HERO ELEMENTS ---- */
 
+    .hero-badge {
+        background: rgba(255, 255, 255, 0.12);
+        color: #e0e7ff;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        letter-spacing: .03em;
+        font-size: .72rem;
+        text-transform: uppercase;
+    }
+
+    .app-hero .btn-light {
+        border: 0;
+        box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.45);
+    }
+
+    .hero-btn-glass {
+        background: rgba(255, 255, 255, 0.10);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        color: #fff;
+        transition: background .2s ease, border-color .2s ease;
+    }
+
+    .hero-btn-glass:hover,
+    .hero-btn-glass:focus {
+        background: rgba(255, 255, 255, 0.18);
+        border-color: rgba(255, 255, 255, 0.35);
+        color: #fff;
+    }
+
+
+    /* ---- QUICK ACTION TILES ---- */
+
+    .hover-lift {
+        border-color: #e2e8f0 !important;
         transition:
             transform 0.2s ease,
             box-shadow 0.2s ease,
             border-color 0.2s ease;
-
     }
-
 
     .hover-lift:hover {
-
         transform: translateY(-2px);
-
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-
-        border-color: #6366f1 !important;
-
+        box-shadow: 0 10px 24px -12px rgba(15, 23, 42, 0.22);
+        border-color: #c7d2fe !important;
     }
-
 
     .hover-lift:hover h6 {
-
         color: #4f46e5;
-
     }
-
 
 </style>
 
