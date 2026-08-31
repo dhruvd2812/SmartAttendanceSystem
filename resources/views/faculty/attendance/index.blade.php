@@ -1,6 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.faculty')
 
 @section('title', 'Lecture Attendance | Smart Attendance')
+@section('page-title', 'Attendance Sessions')
 
 @section('content')
 

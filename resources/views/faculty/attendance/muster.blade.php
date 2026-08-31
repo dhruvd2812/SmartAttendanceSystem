@@ -1,6 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.faculty')
 
 @section('title', 'Attendance Muster | Smart Attendance')
+@section('page-title', 'Attendance Muster')
 
 @section('content')
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
