@@ -1,6 +1,7 @@
-@extends('layouts.app')
+@extends(auth()->check() && auth()->user()->role === 'faculty' ? 'layouts.faculty' : 'layouts.app')
 
 @section('title', 'Manage Notices | Smart Attendance')
+@section('page-title', 'Notices & Updates')
 
 @section('content')
 
