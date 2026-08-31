@@ -1,6 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.faculty')
 
 @section('title', 'Manage Subjects | Smart Attendance')
+@section('page-title', 'My Subjects')
 
 @section('content')
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
