@@ -1,6 +1,7 @@
-@extends('layouts.app')
+@extends(auth()->check() && auth()->user()->role === 'faculty' ? 'layouts.faculty' : 'layouts.app')
 
 @section('title', 'Students | Smart Attendance')
+@section('page-title', 'Students List')
 
 @section('content')
     @php($isAdmin = auth()->user()->role === 'admin')
