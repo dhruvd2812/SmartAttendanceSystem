@@ -1,6 +1,7 @@
-﻿@extends('layouts.app')
+@extends(auth()->check() && auth()->user()->role === 'faculty' ? 'layouts.faculty' : 'layouts.app')
 
 @section('title', 'Add Student | Smart Attendance')
+@section('page-title', 'Add Student')
 
 @section('content')
     <div class="row justify-content-center">
