@@ -1,6 +1,7 @@
-﻿@extends('layouts.app')
+@extends(auth()->check() && auth()->user()->role === 'faculty' ? 'layouts.faculty' : 'layouts.app')
 
 @section('title', 'Attendance QR Studio | Smart Attendance')
+@section('page-title', 'QR Attendance Generator')
 
 @section('content')
 
