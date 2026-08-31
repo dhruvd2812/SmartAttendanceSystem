@@ -1,6 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.faculty')
 
-@section('title', 'Edit Profile | Smart Attendance')
+@section('title', 'My Profile | Smart Attendance')
+@section('page-title', 'My Profile')
 
 @section('content')
 <div class="container py-4" style="max-width: 680px;">
