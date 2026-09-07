@@ -748,7 +748,7 @@ class ChatbotController extends Controller
             "   • Align the classroom projector QR code inside the cyan HUD box.\n" .
             "   • Hear the confirmation chime & celebrate your recorded attendance!\n\n" .
             "2. **Troubleshooting Tips**:\n" .
-            "   • ⏳ **Expired QR**: QR codes refresh every 2 minutes for security. Ask your professor if expired.\n" .
+            "   • ⏳ **Expired QR**: QR codes are valid for 10 minutes for security. Ask your professor if expired.\n" .
             "   • 📷 **Camera Permission**: Allow browser camera access in settings, or switch between cameras using the dropdown.\n" .
             "   • 🖼️ **File Upload**: If camera is unavailable, click *Scan from Image File* to upload a photo of the QR code.";
     }

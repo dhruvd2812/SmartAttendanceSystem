@@ -209,7 +209,7 @@
                         <div class="w-100 max-w-md mb-4">
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <span class="text-muted small fw-semibold">QR Code Validity</span>
-                                <span id="countdown" class="fw-bold fs-5 text-success">02:00</span>
+                                <span id="countdown" class="fw-bold fs-5 text-success">10:00</span>
                             </div>
                             <div class="progress" style="height: 8px; border-radius: 9999px; background: #e2e8f0;">
                                 <div id="countdownProgressBar" class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;"></div>
@@ -319,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const statusBadge = document.getElementById('statusBadge');
     const projectorBtn = document.getElementById('btnProjectorMode');
     const expiresAt = new Date("{{ $session->qr_expires_at->toIso8601String() }}").getTime();
-    const totalDurationMs = 120000; // 2 minutes window
+    const totalDurationMs = 600000; // 10 minutes window
 
     if (projectorBtn) {
         projectorBtn.addEventListener('click', () => {
